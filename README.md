@@ -10,8 +10,10 @@ Learn Wagtail
     pip install wagtail
     pip show wagtail
     wagtail start rocketman .
+    python manage.py migrate
     python manage.py runserver 0.0.0.0:8013
     
-    
+Note: Command-Shift-. will show hidden files.
+
     
     
