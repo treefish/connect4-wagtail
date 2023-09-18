@@ -162,3 +162,7 @@ down
 build
 csu
 logs
+mm
+
+# Wagtail
+media
