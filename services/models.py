@@ -5,11 +5,18 @@ from wagtail.admin.panels import FieldPanel
 
 
 class ServiceListingPage(Page):
+    template = "services/service_listing_page.html"
+
     subtitle = models.TextField(blank=True, max_length=500)
 
     content_panels = Page.content_panels + [
         FieldPanel("subtitle"),
     ]
+
+    def get_context(self, request, *args, **kwargs):
+        context = super().get_context(request, *args, **kwargs)
+        context["services"] = ServicePage.objects.live().public()
+        return context
 
 
 class ServicePage(Page):
