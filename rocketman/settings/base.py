@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     "search",
     # Local
     "services",
+    "flex",
 
     # Wagtail
     "wagtail.contrib.forms",
