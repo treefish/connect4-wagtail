@@ -15,11 +15,28 @@ class TitleBlock(blocks.StructBlock):
         help_text = "Centered text to display on the page."
 
 
+class LinkValue(blocks.StructValue):
+    """ Additional logic for our links
+    """
+    def url(self):
+        internal_page = self.get("internal_page")
+        external_link = self.get("external_link")
+        if internal_page:
+            return internal_page.url
+        elif external_link:
+            return external_link
+        else:
+            return ""
+
+
 class Link(blocks.StructBlock):
 
     link_text = blocks.CharBlock(max_length=50, default="More Detail")
     internal_page = blocks.PageChooserBlock(required=False)
     external_link = blocks.URLBlock(required=False)
+
+    class Meta:
+        value_class = LinkValue
 
 
 class Card(blocks.StructBlock):
