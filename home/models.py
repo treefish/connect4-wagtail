@@ -1,7 +1,11 @@
 from django.db import models
 
 from wagtail.models import Page
+from wagtail.fields import StreamField
 from wagtail.admin.panels import FieldPanel
+
+from streams import blocks
+
 
 class HomePage(Page):
     lead_text = models.CharField(
@@ -31,10 +35,14 @@ class HomePage(Page):
         help_text="The banner background image.",
         on_delete=models.SET_NULL,
     )
+    body = StreamField([
+        ("title", blocks.TitleBlock()),
+    ], null=True, blank=True, use_json_field=True)
 
     content_panels = Page.content_panels + [
         FieldPanel("lead_text"),
         FieldPanel("button"),
         FieldPanel("button_text"),
-        FieldPanel("banner_background_image")
+        FieldPanel("banner_background_image"),
+        FieldPanel("body"),
     ]
