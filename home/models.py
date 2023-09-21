@@ -3,7 +3,7 @@ from django.db import models
 from wagtail.models import Page
 from wagtail.fields import StreamField
 from wagtail.admin.panels import FieldPanel
-
+from wagtail.snippets.blocks import SnippetChooserBlock
 from streams import blocks
 
 
@@ -40,6 +40,11 @@ class HomePage(Page):
         ("cards", blocks.CardsBlock()),
         ("image_and_text", blocks.ImageAndTextBlock()),
         ("cta", blocks.CallToActionBlock()),
+        ("testimonial", SnippetChooserBlock(
+            target_model="testimonials.Testimonial",
+            template="streams/testimonial_block.html"
+        )
+    ),
     ], null=True, blank=True, use_json_field=True)
 
     content_panels = Page.content_panels + [
