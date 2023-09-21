@@ -23,11 +23,11 @@ class FlexPage(Page):
             template="streams/testimonial_block.html"
         )),
         ("pricing_table", blocks.PricingTableBlock(table_options=NEW_TABLE_OPTIONS)),
-        ("richtext_with_title", blocks.RichTextWithTitleBlock()),
-        # ("richtext", wagtail_blocks.RichTextBlock(
-        #     template = "streams/simple_richtext_block.html",
-        #     features = ["bold", "italic", "ol", "ul", "link"])
-        # ),
+        #("richtext_with_title", blocks.RichTextWithTitleBlock()),
+        ("richtext", wagtail_blocks.RichTextBlock(
+            template = "streams/simple_richtext_block.html",
+            features = ["bold", "italic", "ol", "ul", "link"])
+        ),
     ], null=True, blank=True, use_json_field=True)
 
     content_panels = Page.content_panels + [
