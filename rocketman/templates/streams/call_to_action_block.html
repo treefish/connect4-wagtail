@@ -1,0 +1,14 @@
+
+<!--Call to Action Block-->
+<div class="my-md-4 my-2">
+    <div class="row text-center">
+        <div class="col">
+            <h2 class="cc-iat-title">{{ self.title }}</h2>
+              {% if self.link.url %}
+              <a href="{{self.link.url}}" class="btn btn-primary btn-lg" style="padding-left: 3rem; padding-right: 3rem;">
+              {{ self.link.link_text }}
+              </a>
+              {% endif %}
+        </div>
+    </div>
+</div>
