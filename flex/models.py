@@ -7,12 +7,13 @@ from wagtail.snippets.blocks import SnippetChooserBlock
 from wagtail import blocks as wagtail_blocks
 from wagtail.images.blocks import ImageChooserBlock
 
+import flex.models
 from streams import blocks
 from home.models import NEW_TABLE_OPTIONS
 
 
 class FlexPage(Page):
-
+    parent_page_types = ["home.HomePage", "flex.FlexPage"]
     body = StreamField([
         ("title", blocks.TitleBlock()),
         ("cards", blocks.CardsBlock()),
