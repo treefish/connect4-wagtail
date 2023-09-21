@@ -1,0 +1,12 @@
+{% load wagtailcore_tags %}
+
+<!--Simple RichText Block-->
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <h2>{{ self.title }}</h2>
+        <div class="cc-simple-richtext">
+            {{ self.context|richtext }}
+        </div>
+    </div>
+</div>
+<!--End Testimonial Block-->

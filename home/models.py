@@ -7,7 +7,7 @@ from wagtail.snippets.blocks import SnippetChooserBlock
 from streams import blocks
 
 """ From docs - https://docs.wagtail.org/en/v5.1.1/reference/contrib/table_block.html """
-new_table_options = {
+NEW_TABLE_OPTIONS = {
     'minSpareRows': 0,
     'startRows': 4,
     'startCols': 4,
@@ -71,7 +71,7 @@ class HomePage(Page):
             target_model="testimonials.Testimonial",
             template="streams/testimonial_block.html"
         )),
-        ("pricing_table", blocks.PricingTableBlock(table_options=new_table_options)),
+        ("pricing_table", blocks.PricingTableBlock(table_options=NEW_TABLE_OPTIONS)),
     ], null=True, blank=True, use_json_field=True)
 
     content_panels = Page.content_panels + [
