@@ -1,10 +1,13 @@
 from django.db import models
+from django.core.cache import cache
+from django.core.cache.utils import make_template_fragment_key
 
 from wagtail.models import Page
 from wagtail.fields import StreamField
 from wagtail.admin.panels import FieldPanel
 from wagtail.snippets.blocks import SnippetChooserBlock
 from streams import blocks
+
 
 """ From docs - https://docs.wagtail.org/en/v5.1.1/reference/contrib/table_block.html """
 NEW_TABLE_OPTIONS = {
@@ -85,3 +88,13 @@ class HomePage(Page):
         FieldPanel("banner_background_image"),
         FieldPanel("body"),
     ]
+
+    def save(self, *args, **kwargs):
+
+        key = make_template_fragment_key(
+            "home_page_streams",
+            [self.id],
+        )
+        cache.delete(key)
+
+        return super().save(*args, **kwargs)

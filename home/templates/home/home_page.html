@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load wagtailimages_tags wagtailcore_tags %}
+{% load wagtailimages_tags wagtailcore_tags cache %}
 
 {% block banner %}
 {% image page.banner_background_image fill-1600x800 as bg_img %}
@@ -24,7 +24,19 @@
 {% endblock banner %}
 
 {% block content %}
-  {% for block in page.body %}
-    {% include_block block %}
-  {% endfor %}
+
+  {% if not request.is_preview %}
+    {# LIVE #}
+    {% cache 2592000 home_page_streams page.id %}
+      {% for block in page.body %}
+        {% include_block block %}
+      {% endfor %}
+    {% endcache %}
+  {% else %}
+    {# PREVIEW #}
+    {% for block in page.body %}
+      {% include_block block %}
+    {% endfor %}
+  {% endif %}
+
 {% endblock %}
