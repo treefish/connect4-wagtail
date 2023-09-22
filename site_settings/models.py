@@ -1,4 +1,6 @@
 from django.db import models
+from django.core.cache import cache
+from django.core.cache.utils import make_template_fragment_key
 from wagtail.contrib.settings.models import BaseGenericSetting, register_setting
 from wagtail.admin.panels import FieldPanel
 from wagtail.fields import RichTextField
@@ -17,6 +19,12 @@ class HoursSettings(BaseGenericSetting):
         FieldPanel("hours"),
     ]
 
+    def save(self, *args, **kwargs):
+         key = make_template_fragment_key("footer_hours_settings")
+         cache.delete(key)
+
+         return super().save(*args, **kwargs)
+
 
 @register_setting
 class ContactSettings(BaseGenericSetting):
@@ -30,6 +38,12 @@ class ContactSettings(BaseGenericSetting):
     panels = [
         FieldPanel("contact"),
     ]
+
+    def save(self, *args, **kwargs):
+         key = make_template_fragment_key("footer_contact_settings")
+         cache.delete(key)
+
+         return super().save(*args, **kwargs)
 
 
 @register_setting
@@ -58,3 +72,9 @@ class SocialMediaSettings(BaseGenericSetting):
         FieldPanel("instagram"),
         FieldPanel("youtube"),
     ]
+
+    def save(self, *args, **kwargs):
+         key = make_template_fragment_key("footer_social_settings")
+         cache.delete(key)
+
+         return super().save(*args, **kwargs)

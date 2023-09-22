@@ -1,22 +1,18 @@
-{% load static menu_tags wagtailcore_tags %}
+{% load static menu_tags wagtailcore_tags cache %}
 {% get_menu "header" as navigation %}
-
-
-
-
-
 
 <footer class="bg-dark py-4 text-light text-md-left text-center cc-footer" >
   <div class="container">
     <div class="row mx-lg-n3">
       <div class="px-lg-3 col-lg-3 col-md-6 col-sm-12">
         <div class="cc-footer-title">Links</div>
-
+          {% cache 2592000 site_footer %}
           {% for item in navigation.menu_items.all %}
             <a class="cc-footer-link-lg d-block" href="{{ item.link }}" {% if item.open_in_new_tab %}target="_blank"{% endif %}>
               {{ item.title }}
             </a>
           {% endfor %}
+          {% endcache %}
 
       </div>
         <div class="px-lg-2 col-lg-3 col-md-6 col-sm-12">
@@ -28,7 +24,7 @@
           {{ settings.site_settings.HoursSettings.hours|richtext }}
         </div>
         <div class="px-lg-3 col-lg-3 col-md-6 col-sm-12">
-
+            {% cache 2592000 social_footer_sections %}
             {% if settings.site_settings.SocialMediaSettings.facebook %}
               <a href="{{ settings.site_settings.SocialMediaSettings.facebook }}" class="cc-footer-social-icon">
                 <img src="{% static 'images/facebook.svg' %}" alt="Facebook">
@@ -49,7 +45,7 @@
                 <img src="{% static 'images/youtube.svg' %}" alt="YouTube">
               </a>
             {% endif %}
-
+            {% endcache %}
           <div class="cc-footer-copy">&copy; {% now "Y" %} Treefish</div>
       </div>
     </div>

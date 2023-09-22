@@ -1,5 +1,4 @@
 from .base import *
-import os
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -40,13 +39,7 @@ import socket  # only if you haven't already imported this
 hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
 INTERNAL_IPS = [ip[: ip.rfind(".")] + ".1" for ip in ips] + ["127.0.0.1", "10.0.2.2"]
 
-cwd = os.getcwd()
-CACHES = {
-    "default": {
-        "BACKEND": "django.core.cache.backends.filebased.FileBasedCache",
-        "LOCATION": f"{cwd}/.cache"
-    }
-}
+
 
 try:
     from .local import *
