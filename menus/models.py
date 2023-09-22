@@ -4,7 +4,7 @@ from django_extensions.db.fields import AutoSlugField
 from modelcluster.models import ClusterableModel
 from modelcluster.fields import ParentalKey
 from wagtail.models import Orderable
-from wagtail.admin.panels import FieldPanel, PageChooserPanel, InlinePanel
+from wagtail.admin.panels import FieldPanel, InlinePanel
 
 
 class MenuItem(Orderable):
