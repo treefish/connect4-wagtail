@@ -1,0 +1,2 @@
+docker-compose exec wagtail python manage.py shell_plus --print-sql
+#docker-compose exec wagtail python manage.py shell

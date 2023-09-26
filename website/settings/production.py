@@ -2,7 +2,7 @@ from .base import *
 import os
 
 DEBUG = False
-ALLOWED_HOSTS = ["rocketman.treefish.co.nz", "localhost", "0.0.0.0", "127.0.0.1", "192.168.20.24"]
+ALLOWED_HOSTS = ["connect4-wagtail.treefish.co.nz", "localhost", "0.0.0.0", "127.0.0.1", "192.168.20.24"]
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 
 cwd = os.getcwd()

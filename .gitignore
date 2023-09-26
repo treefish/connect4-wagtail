@@ -155,6 +155,7 @@ cython_debug/
 # PyCharm
 .idea/
 
+.env*
 .DS_Store
 docs
 up
@@ -163,6 +164,7 @@ build
 csu
 logs
 mm
+docker-compose.dev.yml
 
 # Wagtail
 media
