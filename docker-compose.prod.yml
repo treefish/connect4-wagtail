@@ -1,0 +1,54 @@
+version: '3.9'
+
+services:
+  nginx:
+    build: ./nginx
+    container_name: connect4-wagtail-nginx
+    ports:
+      - 8014:80
+    volumes:
+      - ./env:/env
+      - ./static:/usr/share/nginx/html/static
+      - ./media:/usr/share/nginx/html/media
+    depends_on:
+      - wagtail
+    restart: "on-failure"
+
+  wagtail:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    container_name: connect4-wagtail
+    volumes:
+      - ./env:/env
+      - .:/app/:consistent
+      - ./wait-for-it.sh:/usr/local/bin/wait-for-it.sh
+    expose:
+      - 8000
+        #command : wait-for-it.sh db:5432 -- python manage.py runserver 0.0.0.0:8000
+    command : wait-for-it.sh db:5432 -- gunicorn website.wsgi:application --config env/etc/gunicorn/conf.py
+      #command : wait-for-it.sh db:5432 -- gunicorn website.wsgi:application -w 2 --threads=4 --worker-class=gthread --bind 0.0.0.0:8000 --timeout 120
+    env_file:
+      - ./.env
+    depends_on:
+      - db
+    networks:
+      - website
+
+  db:
+    image: postgres:15.2
+    restart: unless-stopped
+    container_name: connect4-wagtail-db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - ./.env
+    networks:
+      - website
+
+networks:
+  website:
+
+volumes:
+  postgres_data:

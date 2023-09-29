@@ -122,7 +122,6 @@ celerybeat.pid
 # Environments
 .env
 .venv
-env/
 venv/
 ENV/
 env.bak/
@@ -155,7 +154,7 @@ cython_debug/
 # PyCharm
 .idea/
 
-.env*
+.env.dev
 .DS_Store
 docs
 up
@@ -168,3 +167,4 @@ docker-compose.dev.yml
 
 # Wagtail
 media
+static
