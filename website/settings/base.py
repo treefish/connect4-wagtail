@@ -85,6 +85,7 @@ TEMPLATES = [
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [
             os.path.join(PROJECT_DIR, "templates"),
+            os.path.join(BASE_DIR, 'userauth/templates/userauth/'),
         ],
         "APP_DIRS": True,
         "OPTIONS": {
@@ -188,3 +189,6 @@ WAGTAILADMIN_BASE_URL = "http://connect4-wagtail.treefish.co.nz"
 
 # Custom User & AllAuth
 AUTH_USER_MODEL = "userauth.CustomUser"
+WAGTAIL_USER_CREATION_FORM = 'userauth.forms.WagtailUserCreationForm'
+WAGTAIL_USER_EDIT_FORM = 'userauth.forms.WagtailUserEditForm'
+WAGTAIL_USER_CUSTOM_FIELDS = ['family_name', 'photo_consent', 'post_code', 'city', 'contact_number', 'additional_information',]
