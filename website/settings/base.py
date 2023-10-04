@@ -209,6 +209,12 @@ WAGTAIL_USER_CUSTOM_FIELDS = ['family_name', 'photo_consent', 'post_code', 'city
 
 SITE_ID = 1
 
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_SIGNUP_FORM_CLASS = 'userauth.forms.SignupForm'
+
 # LOGIN_URL = '/login/'
 # LOGIN_REDIRECT_URL = '/'
 # ACCOUNT_AUTHENTICATION_METHOD = "username_email"
@@ -224,3 +230,11 @@ SITE_ID = 1
 # ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False
 # ACCOUNT_USERNAME_BLACKLIST = ["admin", "god"]
 # ACCOUNT_USERNAME_MIN_LENGTH = 2
+
+# Override settings in dev.py and production.py
+EMAIL_HOST = ''
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
+DEFAULT_FROM_EMAIL = ''
