@@ -61,10 +61,14 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.sitemaps",
+    "django.contrib.sites",
 
     # 3rd party
     "widget_tweaks",
     "django_extensions",
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
 ]
 
 MIDDLEWARE = [
@@ -76,6 +80,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "wagtail.contrib.redirects.middleware.RedirectMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = "website.urls"
@@ -131,6 +136,15 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
+
+
+AUTHENTICATION_BACKENDS = (
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
 
 
 # Internationalization
@@ -192,3 +206,21 @@ AUTH_USER_MODEL = "userauth.CustomUser"
 WAGTAIL_USER_CREATION_FORM = 'userauth.forms.WagtailUserCreationForm'
 WAGTAIL_USER_EDIT_FORM = 'userauth.forms.WagtailUserEditForm'
 WAGTAIL_USER_CUSTOM_FIELDS = ['family_name', 'photo_consent', 'post_code', 'city', 'contact_number', 'additional_information',]
+
+SITE_ID = 1
+
+# LOGIN_URL = '/login/'
+# LOGIN_REDIRECT_URL = '/'
+# ACCOUNT_AUTHENTICATION_METHOD = "username_email"
+# ACCOUNT_CONFIRM_EMAIL_ON_GET = True
+# ACCOUNT_EMAIL_REQUIRED = True
+# ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+# ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
+# ACCOUNT_LOGOUT_ON_GET = True
+# ACCOUNT_LOGIN_ON_PASSWORD_RESET = True
+# ACCOUNT_LOGOUT_REDIRECT_URL = '/login/'
+# ACCOUNT_PRESERVE_USERNAME_CASING = False
+# ACCOUNT_SESSION_REMEMBER = True
+# ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False
+# ACCOUNT_USERNAME_BLACKLIST = ["admin", "god"]
+# ACCOUNT_USERNAME_MIN_LENGTH = 2
