@@ -1,0 +1,26 @@
+{% extends 'account/base_card.html' %}
+
+{% load i18n %}
+
+{% block title %}{% trans "Account Delete" %}{% endblock %}
+
+{% block card-header %}
+    <h3>{% trans "Account Delete" %}</h3>
+{% endblock %}
+
+{% block card-body %}
+
+<form method="post">
+    {% csrf_token %}
+    <p>{% trans "Are you sure you want to delete the account" %} {{ object.email }}?</p>
+    <button type="submit" class="btn btn-danger">{% trans "Delete" %}</button>
+</form>
+
+{% endblock %}
+
+{% block card-footer %}
+    <p>{% trans "Already have an account?" %} <a href="{% url 'account_login' %}">{% trans "Sign In" %}</a></p>
+{% endblock %}
+
+
+

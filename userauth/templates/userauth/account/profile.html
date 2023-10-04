@@ -21,6 +21,47 @@
                 {{ request.user.last_name|default:'' }}
             </div>
         </div>
+        <div class="row">
+            <div class="col border">
+                <small>{% trans "E-mail" %}:</small><br>
+                {{ request.user.email }}
+            </div>
+            <div class="col border">
+                <small>{% trans "Family name" %}:</small><br>
+                {{ request.user.family_name }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col border">
+                <small>{% trans "Post Code" %}:</small><br>
+                {{ request.user.post_code }}
+            </div>
+            <div class="col border">
+                <small>{% trans "City" %}:</small><br>
+                {{ request.user.city }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col border">
+                <small>{% trans "Photo consent?" %}:</small><br>
+                {{ request.user.photo_consent|yesno:'Yes,No' }}
+            </div>
+            <div class="col border">
+                <small>{% trans "Contact mobile phone" %}:</small><br>
+                {{ request.user.contact_number }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col border">
+                <small>{% trans "Additional Information" %}:</small><br>
+                {{ request.user.additional_information }}
+            </div>
+        </div>
+
     </div>
 
+{% endblock %}
+
+{% block card-footer %}
+    <a href="{% url 'account_update' request.user.pk %}">{% trans "Update your account" %}</a>
 {% endblock %}

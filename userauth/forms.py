@@ -2,6 +2,7 @@ from .models import CustomUser
 from wagtail.users.forms import UserCreationForm, UserEditForm
 from django import forms
 from django.utils.translation import gettext_lazy as _
+from django.forms import ModelForm
 
 class WagtailUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
@@ -36,3 +37,11 @@ class SignupForm(forms.Form):
         user.contact_number = self.cleaned_data['contact_number']
         user.additional_information = self.cleaned_data['additional_information']
         user.save()
+
+
+class CustomUserUpdateForm(ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['email', 'first_name', 'last_name', 'family_name', 'photo_consent', 'post_code', 'city', 'contact_number', 'additional_information',]
+# TODO: Get a widget for True/False for Photo Consent
+        widgets = {'photo_consent': forms.NullBooleanSelect()}

@@ -1,0 +1,76 @@
+{% extends 'account/base_card.html' %}
+
+{% load i18n %}
+
+{% block title %}{% trans "Account Update" %}{% endblock %}
+
+{% block card-header %}
+    <h3>{% trans "Account Update" %}</h3>
+{% endblock %}
+
+{% block card-body %}
+
+<form method="post" action="{% url 'account_update' request.user.pk %}" class="needs-validation" novalidate>
+    {% csrf_token %}
+    <div class="form-group">
+        {% with field=form.email %}{% include "account/form_field.html" %}{% endwith %}
+    </div>
+    <div class="form-group">
+        {% with field=form.family_name %}{% include "account/form_field.html" %}{% endwith %}
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            {% with field=form.first_name %}{% include "account/form_field.html" %}{% endwith %}
+        </div>
+        <div class="form-group col-md-6">
+            {% with field=form.last_name %}{% include "account/form_field.html" %}{% endwith %}
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            {% with field=form.post_code %}{% include "account/form_field.html" %}{% endwith %}
+        </div>
+        <div class="form-group col-md-6">
+            {% with field=form.city %}{% include "account/form_field.html" %}{% endwith %}
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            {% with field=form.photo_consent %}{% include "account/form_field.html" %}{% endwith %}
+        </div>
+        <div class="form-group col-md-6">
+            {% with field=form.contact_number %}{% include "account/form_field.html" %}{% endwith %}
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            {% with field=form.additional_information %}{% include "account/form_field.html" %}{% endwith %}
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-outline-primary">{% trans "Update" %}</button>
+</form>
+
+{% endblock %}
+
+{% block card-footer %}
+    <p>{% trans "Already have an account?" %} <a href="{% url 'account_login' %}">{% trans "Sign In" %}</a></p>
+
+<div class="text-center py-2">
+    <small>
+        <a href="{% url 'account_delete' request.user.pk %}" class="text-muted">{% trans "Delete your account" %}</a>
+    </small>
+</div>
+
+{% endblock %}
+
+
+
+
+
+
+
