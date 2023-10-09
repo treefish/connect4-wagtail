@@ -156,6 +156,8 @@ cython_debug/
 
 .env.dev
 .DS_Store
+tmp
+data
 docs
 up
 down
@@ -168,3 +170,4 @@ docker-compose.dev.yml
 # Wagtail
 media
 static
+partners

@@ -36,6 +36,9 @@ INSTALLED_APPS = [
     "contact",
     "site_settings",
 
+    # Connect4
+    "events",
+
     # Wagtail
     "wagtail.contrib.forms",
     "wagtail.contrib.redirects",
