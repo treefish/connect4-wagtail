@@ -1,8 +1,10 @@
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.utils import timezone
 
 from wagtail.models import Page
 from wagtail.admin.panels import FieldPanel
+
 
 
 ########################################################################################################################
@@ -117,7 +119,7 @@ class EventType(models.Model):
     def __str__(self):
         return self.name
 
-    
+
 class EventPage(Page):
     parent_page_types = ["events.ProjectPage"]
     subpage_types = []
@@ -144,9 +146,12 @@ class EventPage(Page):
     )
 
     # From Connect4-Django
+    # Note: default=timezone.now() for dates
     start_date = models.DateTimeField("Start Date", help_text='Event start date/time')
     end_date = models.DateTimeField("End Date", blank=True, null=True, help_text='Event end date/time')
-    event_type = models.ForeignKey(EventType, on_delete=models.CASCADE, related_name="event_type", default = 1)
+    event_type = models.CharField(blank=True, max_length=50)
+
+#    event_type = models.ForeignKey(EventType, null=True, on_delete=models.SET_NULL, related_name="event_type") #, default = 1
 #    event_website = models.URLField(blank=True, null=True, help_text='Optional external link for the event or programme')
 #    venue = models.ForeignKey(Venue, on_delete=models.CASCADE, related_name="venue", default = 1)
     capacity = models.PositiveSmallIntegerField("Capacity", default=300)  # Default to Venue capacity somehow. Override Save?
@@ -166,11 +171,19 @@ class EventPage(Page):
         FieldPanel("event_image"),
         FieldPanel("start_date"),
         FieldPanel("end_date"),
-        FieldPanel("event_type"),
+        # FieldPanel("event_type"),
         FieldPanel("capacity"),
         FieldPanel("bookable"),
 
     ]
+
+    @property
+    def event_passed(self):
+        return self.end_date < timezone.now()
+
+    @property
+    def event_now(self):
+        return self.start_date < timezone.now() < self.end_date
 
     def clean(self):
         super().clean()

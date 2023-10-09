@@ -36,6 +36,10 @@
         <div class="card-body py-3 px-3">
           <a href="{{ card.url }}">
             <h5 class="card-title">{{ card.title }}</h5>
+            <ul>
+                <li>Start Date/Time: {{ card.start_date }}</li>
+                <li>End Date/Time: {{ card.end_date }}</li>
+            </ul>
             {% if card.description %}
               <p class="card-description">{{ card.description }}</p>
             {% endif %}
