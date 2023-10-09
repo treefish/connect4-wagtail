@@ -108,6 +108,16 @@ class ProjectPage(Page):
 #         return context
 
 
+class EventType(models.Model):
+    name = models.CharField(max_length=100)
+
+    class Meta:
+        ordering = ["name"]
+
+    def __str__(self):
+        return self.name
+
+    
 class EventPage(Page):
     parent_page_types = ["events.ProjectPage"]
     subpage_types = []
@@ -133,12 +143,33 @@ class EventPage(Page):
         related_name="+",
     )
 
+    # From Connect4-Django
+    start_date = models.DateTimeField("Start Date", help_text='Event start date/time')
+    end_date = models.DateTimeField("End Date", blank=True, null=True, help_text='Event end date/time')
+    event_type = models.ForeignKey(EventType, on_delete=models.CASCADE, related_name="event_type", default = 1)
+#    event_website = models.URLField(blank=True, null=True, help_text='Optional external link for the event or programme')
+#    venue = models.ForeignKey(Venue, on_delete=models.CASCADE, related_name="venue", default = 1)
+    capacity = models.PositiveSmallIntegerField("Capacity", default=300)  # Default to Venue capacity somehow. Override Save?
+#    visible = models.BooleanField("Event visible?", default=False) # Use Draft or Publish state
+    bookable = models.BooleanField("Event bookable?", default=False, help_text='Allow bookings for this event?')
+#    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="project")
+    week = models.PositiveSmallIntegerField("Event week", default=1)
+#    wp_event_id = models.PositiveIntegerField("Wordpress Event ID", blank=True, null=True)
+
+
     content_panels = Page.content_panels + [
         FieldPanel("description"),
+        FieldPanel("week"),
         FieldPanel("internal_page"),
         FieldPanel("external_page"),
         FieldPanel("button_text"),
         FieldPanel("event_image"),
+        FieldPanel("start_date"),
+        FieldPanel("end_date"),
+        FieldPanel("event_type"),
+        FieldPanel("capacity"),
+        FieldPanel("bookable"),
+
     ]
 
     def clean(self):
@@ -158,3 +189,11 @@ class EventPage(Page):
                 "external_page": ValidationError("Please select either a page OR an external URL")
             })
 
+        # end_date must not be before start_date (can be the same day).
+        if self.end_date:
+            if self.end_date < self.start_date:
+                raise ValidationError({"end_date": "The end date must be the same or after the start date."})
+
+
+    class Meta:
+        ordering = ["-start_date"]

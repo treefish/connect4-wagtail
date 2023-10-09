@@ -1,10 +1,12 @@
 from django.db import models
+#from wagtail.admin.panels import FieldPanel
 
-from wagtail.snippets.models import register_snippet
 
-@register_snippet
 class Partner(models.Model):
     """ A Partner class
+        Note: Do all this using the Function approach as per: https://docs.wagtail.org/en/stable/topics/snippets/registering.html
+        to get snippet onto admin menu list. Look in wagtail_hooks.py for implementation.
+        That makes Partner a simple Django model.
     """
 
     name = models.TextField(max_length=100, blank=False, null=False)
@@ -17,12 +19,6 @@ class Partner(models.Model):
         help_text="This image should be the partner logo and will be cropped to a maximum of ?px by ?px on the Partner page.",
         related_name="+",
     )
-
-    panels = [
-        FieldPanel("name"),
-        FieldPanel("url"),
-        FieldPanel("logo"),
-    ]
 
     def __str__(self):
         return f"{self.name}"
