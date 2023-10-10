@@ -16,6 +16,9 @@ class CustomUserUpdateView(UpdateView):
     model = CustomUser
     form_class = CustomUserUpdateForm
 
+    def get_object(self, queryset=None):
+        return CustomUser.objects.get(id=self.request.user.id)
+
 
 class CustomUserDeleteView(DeleteView):
     model = CustomUser
