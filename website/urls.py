@@ -14,13 +14,12 @@ urlpatterns = [
     path("documents/", include(wagtaildocs_urls)),
     path("search/", search_views.search, name="search"),
     path("sitemap.xml", sitemap),
-    path('accounts/', include('allauth.urls')),
-    path('accounts/', include('userauth.urls')),
+    path('', include('allauth.urls')),
+    path('', include('userauth.urls')),
 ]
 
 
 if settings.DEBUG:
-    print("Debug!!!")
     import debug_toolbar
     from django.conf.urls.static import static
     from django.contrib.staticfiles.urls import staticfiles_urlpatterns

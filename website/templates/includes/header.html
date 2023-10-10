@@ -21,6 +21,15 @@
           {% endfor %}
         {% endcache %}
       </ul>
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          {% if request.user.is_authenticated %}
+            {{ request.user.first_name }}, <a href="{% url 'account_logout' %}" class="nav-link d-inline">Logout?</a>
+          {% else %}
+            Hello Guest, <a href="{% url 'account_login' %}" class="nav-link d-inline">Login</a>
+          {% endif %}
+        </li>
+      </ul>
     </div>
   </div>
 </nav>

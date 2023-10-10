@@ -3,7 +3,7 @@ from django.core.exceptions import ValidationError
 from django.utils import timezone
 
 from wagtail.models import Page
-from wagtail.admin.panels import FieldPanel
+from wagtail.admin.panels import FieldPanel, FieldRowPanel
 
 
 
@@ -164,13 +164,18 @@ class EventPage(Page):
 
     content_panels = Page.content_panels + [
         FieldPanel("description"),
-        FieldPanel("week"),
+
         FieldPanel("internal_page"),
         FieldPanel("external_page"),
         FieldPanel("button_text"),
         FieldPanel("event_image"),
-        FieldPanel("start_date"),
-        FieldPanel("end_date"),
+        FieldRowPanel(
+            [
+                FieldPanel("week"),
+                FieldPanel("start_date"),
+                FieldPanel("end_date")
+            ]
+        ),
         # FieldPanel("event_type"),
         FieldPanel("capacity"),
         FieldPanel("bookable"),
