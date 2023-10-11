@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     # Connect4
     "events",
     "partners",
+    "registration",
 
     # Wagtail
     "wagtail.contrib.forms",
