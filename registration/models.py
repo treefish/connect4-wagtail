@@ -4,6 +4,9 @@ from django.core.exceptions import ValidationError
 
 from dateutil.relativedelta import relativedelta
 from datetime import *
+
+User = get_user_model()
+
 # # For generating unique wp_member_id in FamilyMember where one is created manually, rather than through sync from Wordpress.
 # import random
 # import string
@@ -49,7 +52,7 @@ from datetime import *
 
 class FamilyMember(models.Model):
     family = models.ForeignKey(
-        get_user_model(),
+        User,
         on_delete=models.CASCADE,
         related_name="family_member",
     )

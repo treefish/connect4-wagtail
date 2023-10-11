@@ -15,6 +15,8 @@ class CustomUser(AbstractUser):
     contact_number = models.CharField(validators=[phone_regex], verbose_name=_("Contact mobile phone"), max_length=17, blank=True, null=True, help_text='e.g. +612392489800')
     additional_information = models.CharField(verbose_name=_("Additional information"), max_length=4096, blank=True, null=True, help_text='e.g. Family is sensitive to bright light.')
 
+
+
     class Meta:
         ordering = ['last_name']
 
