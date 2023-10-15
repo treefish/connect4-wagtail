@@ -16,6 +16,8 @@ urlpatterns = [
     path("sitemap.xml", sitemap),
     path('', include('allauth.urls')),
     path('', include('userauth.urls')),
+
+    path('registration/', include('registration.urls')),
 ]
 
 

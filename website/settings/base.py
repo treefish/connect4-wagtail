@@ -75,6 +75,8 @@ INSTALLED_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
+    "crispy_forms",
+    "crispy_bootstrap5",
 ]
 
 MIDDLEWARE = [
@@ -97,6 +99,7 @@ TEMPLATES = [
         "DIRS": [
             os.path.join(PROJECT_DIR, "templates"),
             os.path.join(BASE_DIR, 'userauth/templates/userauth/'),
+            os.path.join(BASE_DIR, 'registration/templates/registration/'),
         ],
         "APP_DIRS": True,
         "OPTIONS": {
@@ -234,6 +237,10 @@ ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False
 ACCOUNT_USERNAME_BLACKLIST = ["admin", "goddess", "god"]
 ACCOUNT_USERNAME_MIN_LENGTH = 5
 #ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 5
+
+# django-crispy-forms
+# https://django-crispy-forms.readthedocs.io/en/latest/install.html#template-packs
+CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 # Override settings in dev.py and production.py
 EMAIL_HOST = ''

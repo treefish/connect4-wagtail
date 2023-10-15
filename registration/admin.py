@@ -5,7 +5,6 @@ from django.contrib.auth.admin import UserAdmin
 
 User = get_user_model()
 
-
 class ParentAdmin(admin.ModelAdmin):
     list_display = ("first_name", "last_name", "id")
 #    inlines = (ParentMoreInline, )
