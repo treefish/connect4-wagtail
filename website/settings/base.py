@@ -243,9 +243,3 @@ ACCOUNT_USERNAME_MIN_LENGTH = 5
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 # Override settings in dev.py and production.py
-EMAIL_HOST = ''
-EMAIL_USE_TLS = True
-EMAIL_PORT = 587
-EMAIL_HOST_USER = ''
-EMAIL_HOST_PASSWORD = ''
-DEFAULT_FROM_EMAIL = ''
