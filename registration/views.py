@@ -7,8 +7,8 @@ from .forms import FamilyMemberForm, FamilyMemberChildForm
 User = get_user_model()
 
 
-def create_family_member(request, pk):
-    user = User.objects.get(id=pk)
+def create_family_member(request):
+    user = User.objects.get(id=request.user.id)
     family_members = FamilyMember.objects.filter(family=user)
     form = FamilyMemberForm(request.POST or None)
     child_form = FamilyMemberChildForm(request.POST or None)
@@ -118,9 +118,6 @@ def update_family_member(request, pk):
                 "child_form": child_form,
             })
 
-
-
-
     context = {
         "form": form,
         "child_form": child_form,
@@ -128,24 +125,6 @@ def update_family_member(request, pk):
     }
 
     return render(request, "registration/partials/family_member_form.html", context)
-
-
-## Original
-# def update_family_member(request, pk):
-#     family_member = FamilyMember.objects.get(id=pk)
-#     form = FamilyMemberForm(request.POST or None, instance=family_member)
-#
-#     if request.method == "POST":
-#         if form.is_valid():
-#             form.save()
-#             return redirect("detail-family-member", pk=family_member.id)
-#
-#     context = {
-#         "form": form,
-#         "family_member": family_member
-#     }
-#
-#     return render(request, "registration/partials/family_member_form.html", context)
 
 
 def delete_family_member(request, pk):

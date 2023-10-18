@@ -18,6 +18,7 @@ urlpatterns = [
     path('', include('userauth.urls')),
 
     path('registration/', include('registration.urls')),
+    path('bookings/', include('bookings.urls')),
 ]
 
 

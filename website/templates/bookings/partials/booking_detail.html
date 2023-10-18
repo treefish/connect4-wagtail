@@ -1,0 +1,20 @@
+<div hx-target="this" hx-swap="outerHTML" class="mt-3 py-3 px-3 bg-white shadow border border-gray-100">
+    <h3 class="text-lg leading-6 font-medium text-gray-900">
+        Event: {{ booking.event }}
+    </h3>
+    <p class="text-gray-600">Event Date: {{ booking.event.start_date|date:'j/m/Y' }}</p>
+    <p class="text-gray-600">Booking Date: {{ booking.booking_date|date:'j/m/Y h:i a' }}</p>
+
+    <div class="mt-2">
+            <button hx-get="{% url 'update-booking-attendees' booking.id %}"
+            class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            Attendees
+            </button>
+            <button hx-post="{% url 'delete-booking' booking.id %}"
+            class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            Cancel Booking
+            </button>
+    </div>
+</div>
+
+

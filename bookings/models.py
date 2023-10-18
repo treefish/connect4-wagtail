@@ -1,7 +1,9 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
+from django.utils import timezone
 from registration.models import FamilyMember
+from events.models import EventPage
 
 # from dateutil.relativedelta import relativedelta
 # from datetime import *
@@ -28,6 +30,7 @@ class Attendance(models.Model):
     booking = models.ForeignKey(Booking, on_delete=models.CASCADE)
     # Note Attendee must be a FamilyMember of the Family that Booked.
     family_member = models.ForeignKey(FamilyMember, on_delete=models.CASCADE)
+    # booked = models.BooleanField("Booked for event?", default=False)
     attended = models.BooleanField("Attended event?", default=False)
 
     def __str__(self):

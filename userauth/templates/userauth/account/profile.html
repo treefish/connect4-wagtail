@@ -168,7 +168,7 @@
 
 {% block card-footer %}
     <a href="{% url 'account_update'  %}">{% trans "Update your account" %}</a>
-    <a href="{% url 'create-family-member' request.user.pk %}">{% trans "Update Family Members" %}</a>
+    <a href="{% url 'family-members' %}">{% trans "Update Family Members" %}</a>
     {% comment %}
     <a href="{% url 'account_update' request.user.pk %}">{% trans "Update your account" %}</a>
     {% endcomment %}

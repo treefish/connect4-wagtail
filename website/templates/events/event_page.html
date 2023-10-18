@@ -9,11 +9,14 @@
                 {{ page.description }}
             </p>
             <hr>
+            {% comment %}
             {% if page.internal_page or page.external_page %}
             <a href="{% if page.internal_page %}{{ page.internal_page.rl }}{% elif page.external_page %}{{ page.external_page }}{% else %}# {% endif %}" class="btn btn-primary btn-lg mb-2 mb-lg-0">
                 {{ page.button_text }}
-            {% endif %}
             </a>
+            {% endif %}
+            {% endcomment %}
+            <a href="{% url 'book-event' page.id %}" class="btn btn-primary btn-lg mb-2 mb-lg-0">Book</a>
         </div>
         <div class="col-lg-6">
           <picture>
