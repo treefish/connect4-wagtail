@@ -13,13 +13,14 @@ class BookingForm(forms.ModelForm):
         model = Booking
         fields = ('event',)
 
-    def __init__(self, available_events, *args, **kwargs):
+    def __init__(self, available_events=None, *args, **kwargs):
         '''
-        available_events is a list of event ids to use in the drop-down select form for Event.
-        If empty or None, then allow selection of all Events (EventPage).
+        available_events: A list of event ids to use in the drop-down select form for Event.
+        Note: if available_events is an empty list, this means no event is bookable for the user, so presents a
+        drop-down selection with no events.
         '''
         super(BookingForm, self).__init__(*args, **kwargs)
-        if available_events:
+        if available_events is not None:
             self.fields['event'].queryset = EventPage.objects.filter(id__in=available_events)
 
 
