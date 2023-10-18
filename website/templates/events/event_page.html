@@ -15,8 +15,10 @@
                 {{ page.button_text }}
             </a>
             {% endif %}
-            {% endcomment %}
+
             <a href="{% url 'book-event' page.id %}" class="btn btn-primary btn-lg mb-2 mb-lg-0">Book</a>
+            {% endcomment %}
+            <a href="{% url 'bookings' %}" class="btn btn-primary btn-lg mb-2 mb-lg-0">Book (TODO)</a>
         </div>
         <div class="col-lg-6">
           <picture>
