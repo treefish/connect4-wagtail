@@ -9,7 +9,7 @@ DEBUG = False
 ALLOWED_HOSTS = ["pc-s-docker.park.internal", "dockery.treefish.co.nz", "connect4-wagtail.treefish.co.nz", "localhost", "0.0.0.0", "127.0.0.1"]
 SECRET_KEY = env("DJANGO_SECRET_KEY")
 
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+# No! Using nginx - STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 cwd = os.getcwd()
 CACHES = {
