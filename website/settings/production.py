@@ -6,7 +6,7 @@ env = Env()
 env.read_env()
 
 DEBUG = False
-ALLOWED_HOSTS = ["dockery.treefish.co.nz", "connect4-wagtail.treefish.co.nz", "localhost", "0.0.0.0", "127.0.0.1", "192.168.20.24"]
+ALLOWED_HOSTS = ["pc-s-docker.park.internal", "dockery.treefish.co.nz", "connect4-wagtail.treefish.co.nz", "localhost", "0.0.0.0", "127.0.0.1"]
 SECRET_KEY = env("DJANGO_SECRET_KEY")
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"

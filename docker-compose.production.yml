@@ -12,7 +12,7 @@ services:
     env_file:
       - ./.env
     ports:
-      - 8014:80
+      - 8014:8000
     #command : wait-for-it.sh db:5432 -- python manage.py runserver 0.0.0.0:8000
     command : wait-for-it.sh db:5432 -- gunicorn website.wsgi:application -w 2 --threads=4 --worker-class=gthread --bind 0.0.0.0:8000 --timeout 120
     #command : wait-for-it.sh db:5432 -- gunicorn website.wsgi:application --config env/etc/gunicorn/conf.py

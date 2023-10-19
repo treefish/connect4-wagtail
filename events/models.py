@@ -135,7 +135,7 @@ class EventPage(Page):
         on_delete=models.SET_NULL,
     )
     external_page = models.URLField(blank=True)
-    button_text = models.CharField(blank=True, max_length=50)
+    button_text = models.CharField(blank=True, default="Book", max_length=50)
     event_image = models.ForeignKey(
         "wagtailimages.Image",
         null=True,
