@@ -12,7 +12,8 @@ services:
     env_file:
       - ./.env
     ports:
-      - 8014:8000
+      # Note: this is port 80 because that's what nginx is running from.
+      - 8014:80
     volumes:
       - ./env:/env
       - ./static:/usr/share/nginx/html/static
