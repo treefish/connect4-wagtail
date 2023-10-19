@@ -1,4 +1,8 @@
 from .base import *
+from environs import Env
+
+env = Env()
+env.read_env()
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -44,14 +48,24 @@ print("*** END Debug Toolbar ***")
 # Database PostgreSQL
 DATABASES = {
     "default": {
-        "ENGINE": os.environ.get("SQL_ENGINE"),
-        "NAME": os.environ.get("SQL_DATABASE"),
-        "USER": os.environ.get("SQL_USER"),
-        "PASSWORD": os.environ.get("SQL_PASSWORD"),
-        "HOST": os.environ.get("SQL_HOST"),
-        "PORT": os.environ.get("SQL_PORT"),
+        "ENGINE": env("SQL_ENGINE"),
+        "NAME": env("SQL_DATABASE"),
+        "USER": env("SQL_USER"),
+        "PASSWORD": env("SQL_PASSWORD"),
+        "HOST": env("SQL_HOST"),
+        "PORT": env("SQL_PORT"),
     }
 }
+
+# https://docs.djangoproject.com/en/dev/ref/settings/#email-backend
+#EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL")
+EMAIL_USE_TLS = env("EMAIL_USE_TLS")
+EMAIL_HOST = env("EMAIL_HOST")
+EMAIL_HOST_USER = env("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
+EMAIL_PORT = env("EMAIL_PORT")
 
 
 try:

@@ -1,1 +1,3 @@
-docker-compose exec wagtail python manage.py check
+export COMPOSE_FILE=docker-compose.dev.yml
+
+docker compose exec wagtail python manage.py check

@@ -165,6 +165,8 @@ build
 csu
 logs
 mm
+gsk
+shell
 docker-compose.dev.yml
 
 # Wagtail
