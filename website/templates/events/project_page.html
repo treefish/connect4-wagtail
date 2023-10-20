@@ -17,7 +17,7 @@
         </div>
         <div class="col-lg-6">
           <picture>
-              {% image page.project_image fill-573x369 as img %}
+              {% image page.project_image fill-287x185 as img %}
               <img src="{{ img.url }}" style="width: 100%; height=:auto;" alt=""{{ img.alt }}">
           </picture>
         </div>
@@ -36,10 +36,9 @@
         <div class="card-body py-3 px-3">
           <a href="{{ card.url }}">
             <h5 class="card-title">{{ card.title }}</h5>
-            <ul>
-                <li>Start Date/Time: {{ card.start_date }}</li>
-                <li>End Date/Time: {{ card.end_date }}</li>
-            </ul>
+            <p class="card-description">Start: {{ card.start_date|date:'j/m/Y h:i a' }}</p>
+            <p class="card-description">Finish: {{ card.end_date|date:'j/m/Y h:i a' }}</p>
+
             {% if card.description %}
               <p class="card-description">{{ card.description }}</p>
             {% endif %}
