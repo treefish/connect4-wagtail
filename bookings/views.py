@@ -10,8 +10,9 @@ from django.views.generic.detail import DetailView
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth import get_user_model
 from .models import Booking, Attendance
-from .forms import BookingForm, AttendanceForm
+from .forms import BookingForm, BookingUpdateForm
 from events.models import EventPage
+from registration.models import FamilyMember
 
 User = get_user_model()
 
@@ -56,16 +57,34 @@ def available_events(user):
 
 
 def create_booking(request):
+    print(f"* <<create_booking>>")
     user = User.objects.get(id=request.user.id)
     booking_list = Booking.objects.filter(family=user).order_by("event__start_date")
     ids = available_events(user)
-    form = BookingForm(data=request.POST or None, available_events=ids)
+    form = BookingForm(data=request.POST or None, available_events=ids, user=user)
 
     if request.method == "POST":
         if form.is_valid():
             booking = form.save(commit=False)
             booking.family = user
             booking.save()
+
+            # handle list of ticked booked family members.
+            # This is hacking! Must be a cleaner way to do this.
+            booked_attendees = request.POST.getlist('attendees')
+            for id in booked_attendees:
+                family_member = FamilyMember.objects.get(id=id)
+                print(f"* <create_booking>: Booked to come: {family_member}")
+                attendance, created = Attendance.objects.get_or_create(booking=booking, family_member=family_member)
+                if created:
+                    print(f"* <create_booking>: Creating booked atendance for {family_member}")
+                else:
+                    print(f"* <create_booking>: Updating booked attendance for {family_member}")
+
+            # print(f"* Attendees data: {attendees}")
+            # for a in attendees:
+            #     print(f"* Each attendee data: {a}")
+
 
             return redirect("detail-booking", pk=booking.id)
         else:
@@ -83,9 +102,10 @@ def create_booking(request):
 
 
 def create_booking_form(request):
+    print(f"* <<create_booking_form>>")
     user = User.objects.get(id=request.user.id)
     ids = available_events(user)
-    form = BookingForm(data=None, available_events=ids)
+    form = BookingForm(data=None, available_events=ids, user=user)
     context = {
         "form": form
     }
@@ -93,24 +113,24 @@ def create_booking_form(request):
 
 
 def detail_booking(request, pk):
+    print(f"* <<detail_booking>>")
     booking = get_object_or_404(Booking, id=pk)
+    booked_attendees = Attendance.objects.filter(booking=booking)
+    print(f"* <detail_booking>: Attendees: {booked_attendees}")
     context = {
-        "booking": booking
+        "booking": booking,
+        # "booked_attendees": booked_attendees,
     }
     return render(request, "bookings/partials/booking_detail.html", context)
 
 
 def update_booking_attendees(request, pk):
+    print(f"* <<update_booking_attendees>>")
     user = User.objects.get(id=request.user.id)
     booking = Booking.objects.get(id=pk)
-    ids = available_events(user)
-    form = BookingForm(data=request.POST or None, available_events=ids, instance=booking)
-    # if family_member.type == FamilyMember.Types.CHILD:
-    #     childmore = family_member.childmore
-    #     child_form = FamilyMemberChildForm(request.POST or None, instance=childmore)
-    # else:
-    #     child_form = FamilyMemberForm(None)
-
+    #ids = available_events(user)
+    form = BookingUpdateForm(data=request.POST or None, user=user, instance=booking)
+    print(f"* <update_booking_attendees>: Updating Booking for {user} for booking {booking}")
     if request.method == "POST":
         pass
 
