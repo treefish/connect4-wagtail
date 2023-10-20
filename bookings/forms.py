@@ -46,7 +46,7 @@ class BookingUpdateForm(forms.ModelForm):
 
     class Meta:
         model = Booking
-        fields = ('event',)
+        fields = ('booking_date',)
 
     def __init__(self, user=None, instance=None, *args, **kwargs):
         print(f"* <<BookingUpdateForm init>>")
@@ -57,22 +57,24 @@ class BookingUpdateForm(forms.ModelForm):
         if instance:
             print(f"* <BookingUpdateForm>: Updating booked family members for booking: {instance}")
             # self.fields["event"] = instance.event
-            #self.fields["event"].widget.attrs['readonly'] = True
+            self.fields["booking_date"].widget.attrs['readonly'] = True
+            #self.fields['booking_date'].widget.attrs['hidden'] = True
             print(f"* - Event: {instance.event}")
             booked_attendees = Attendance.objects.filter(booking=instance)
             print(f"* - Booked Attendees: {booked_attendees}")
+
+            # This should be the Attendance objects, to pre-set the booked or not.
             self.fields['attendees'].queryset = FamilyMember.objects.filter(family=user)
+
+#            self.fields['attendees'].queryset = booked_attendees
+
         else:
             print(f"* <BookingUpdateForm>: Updating booked family members for booking: No booking!")
-        # if user:
-        #
-        #     family_members =
-        #     self.fields['attendees'].queryset = FamilyMember.objects.filter(family=user)
 
-    def clean(self):
-        print(f"* <<BookingUpdateForm clean>>")
-        super().clean()
-        print(f"* Form Data: {self.data}")
+    # def clean(self):
+    #     print(f"* <<BookingUpdateForm clean>>")
+    #     super().clean()
+    #     print(f"* <BookingUpdateForm>: Form Data: {self.data}")
 
 
 # class AttendanceForm(forms.ModelForm):

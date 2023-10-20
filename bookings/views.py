@@ -81,11 +81,6 @@ def create_booking(request):
                 else:
                     print(f"* <create_booking>: Updating booked attendance for {family_member}")
 
-            # print(f"* Attendees data: {attendees}")
-            # for a in attendees:
-            #     print(f"* Each attendee data: {a}")
-
-
             return redirect("detail-booking", pk=booking.id)
         else:
             return render(request, "bookings/partials/booking_form.html", context={
@@ -129,38 +124,33 @@ def update_booking_attendees(request, pk):
     user = User.objects.get(id=request.user.id)
     booking = Booking.objects.get(id=pk)
     #ids = available_events(user)
-    form = BookingUpdateForm(data=request.POST or None, user=user, instance=booking)
+
+    booked_attendees = Attendance.objects.filter(booking=booking)
+
+    form = BookingUpdateForm(data=request.POST or None, user=user, instance=booking, initial={"attendees": booked_attendees})
     print(f"* <update_booking_attendees>: Updating Booking for {user} for booking {booking}")
     if request.method == "POST":
-        pass
+        if form.is_valid():
+            # handle list of ticked booked family members.
+            # This is hacking! Must be a cleaner way to do this.
+            booked_attendees = request.POST.getlist('attendees')
+            for id in booked_attendees:
+                family_member = FamilyMember.objects.get(id=id)
+                print(f"* <update_booking_attendees>: Booked to come: {family_member}")
+                attendance, created = Attendance.objects.get_or_create(booking=booking, family_member=family_member)
+                if created:
+                    print(f"* <update_booking_attendees>: Creating booked attendance for {family_member}")
+                else:
+                    print(f"* <update_booking_attendees>: Updating booked attendance for {family_member}")
 
-        # if form.is_valid():
-        #     family_member = form.save(commit=False)
-        #     if family_member.type == FamilyMember.Types.PARENT:
-        #         print("* Processing PARENT form")
-        #         family_member.save()
-        #
-        #         return redirect("detail-family-member", pk=family_member.id)
-        #     elif family_member.type == FamilyMember.Types.CHILD:
-        #         print("* Processing CHILD form")
-        #         if child_form.is_valid():
-        #             family_member.type = FamilyMember.Types.CHILD
-        #             family_member.save()
-        #             childmore = child_form.save(commit=False)
-        #             childmore.family_member = family_member
-        #             childmore.save()
-        #
-        #             return redirect("detail-family-member", pk=family_member.id)
-        #         else:
-        #             return render(request, "registration/partials/family_member_form.html", context={
-        #                 "form": form,
-        #                 "child_form": child_form,
-        #             })
-        # else:
-        #     return render(request, "registration/partials/family_member_form.html", context={
-        #         "form": form,
-        #         "child_form": child_form,
-        #     })
+            return redirect("detail-booking", pk=booking.id)
+        else:
+            return render(request, "bookings/partials/booking_form.html", context={
+                "form": form,
+            })
+    else:
+        print(f"* <update_booking_attendees>: Need to pre-populate form & booking (Attendance)")
+
 
     context = {
         "form": form,
@@ -168,7 +158,6 @@ def update_booking_attendees(request, pk):
     }
 
     return render(request, "bookings/partials/booking_form.html", context)
-
 
 
 def delete_booking(request, pk):
