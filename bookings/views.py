@@ -173,27 +173,3 @@ def delete_booking(request, pk):
             "POST",
         ]
     )
-
-
-
-
-
-
-
-# class BookEvent(DetailView):
-#
-#
-#     def get_query_set(self, **kwargs):
-#         qs =
-#         return
-#
-#
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         event = EventPage.objects.get(id=self.request.pk)
-#         user = User.objects.get(id=self.request.user.id)
-#         family_members = FamilyMember.objects.filter(family=user)
-#         context['family_members'] = family_members
-#         context['event'] = event
-#         return context
-
