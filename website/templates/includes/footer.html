@@ -1,5 +1,5 @@
 {% load static menu_tags wagtailcore_tags cache %}
-{% get_menu "header" as navigation %}
+{% get_menu "footer" as navigation %}
 
 <footer class="bg-dark py-4 text-light text-md-left text-center cc-footer" >
   <div class="container">
@@ -50,7 +50,7 @@
             {% comment %}
             {% endcache %}
             {% endcomment %}
-          <div class="cc-footer-copy">&copy; {% now "Y" %} Park Community School</div>
+          <div class="cc-footer-copy">&copy; {% now "Y" %}, Connect4 all rights reserved.</div>
       </div>
     </div>
   </div>
