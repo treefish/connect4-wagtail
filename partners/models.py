@@ -38,7 +38,7 @@ class PartnerPage(Page):
         on_delete=models.SET_NULL,
     )
     external_page = models.URLField(blank=True)
-    button_text = models.CharField(blank=True, max_length=50)
+#    button_text = models.CharField(blank=True, max_length=50, default="Details")
     partner_image = models.ForeignKey(
         "wagtailimages.Image",
         null=True,
@@ -52,7 +52,7 @@ class PartnerPage(Page):
         FieldPanel("name"),
         FieldPanel("internal_page"),
         FieldPanel("external_page"),
-        FieldPanel("button_text"),
+#        FieldPanel("button_text"),
         FieldPanel("partner_image"),
     ]
 

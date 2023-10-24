@@ -12,13 +12,13 @@
             {% endif %}
         </div>
     </div>
-    <div class="row mt-4">
+    <div class="row row-cols-auto">
     {% for card in partners %}
-    <div class="col-md-6 d-flex align-items-stretch">
+    <div class="col">
       <div class="card border-0">
         <a href="{% if card.internal_page %}{{ card.internal_page.rl }}{% elif card.external_page %}{{ card.external_page }}{% else %}#{% endif %}" target="_blank">
           <picture>
-            {% image card.partner_image width-400 as card_img %}
+            {% image card.partner_image width-200 as card_img %}
             <img src="{{ card_img.url }}" alt="{{ card_img.alt }}" class="lazy card-img-top">
           </picture>
         </a>
