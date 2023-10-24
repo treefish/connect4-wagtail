@@ -114,7 +114,7 @@ def detail_booking(request, pk):
     print(f"* <detail_booking>: Attendees: {booked_attendees}")
     context = {
         "booking": booking,
-        # "booked_attendees": booked_attendees,
+        "booked_attendees": booked_attendees,
     }
     return render(request, "bookings/partials/booking_detail.html", context)
 
@@ -123,14 +123,15 @@ def update_booking_attendees(request, pk):
     print(f"* <<update_booking_attendees>>")
     user = User.objects.get(id=request.user.id)
     booking = Booking.objects.get(id=pk)
-    #ids = available_events(user)
-
     booked_attendees = Attendance.objects.filter(booking=booking)
 
-    form = BookingUpdateForm(data=request.POST or None, user=user, instance=booking, initial={"attendees": booked_attendees})
+    form = BookingUpdateForm(data=request.POST or None, user=user, instance=booking) #, initial={"attendees": booked_attendees})
     print(f"* <update_booking_attendees>: Updating Booking for {user} for booking {booking}")
     if request.method == "POST":
         if form.is_valid():
+            # Remove current bookings
+            booked_attendees.delete()
+
             # handle list of ticked booked family members.
             # This is hacking! Must be a cleaner way to do this.
             booked_attendees = request.POST.getlist('attendees')

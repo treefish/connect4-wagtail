@@ -38,6 +38,10 @@ class BookingForm(forms.ModelForm):
 
 
 class BookingUpdateForm(forms.ModelForm):
+    # family_members = forms.ModelMultipleChoiceField(
+    #     queryset = None,
+    #     widget = forms.CheckboxSelectMultiple
+    # )
 
     attendees = forms.ModelMultipleChoiceField(
         queryset = None,
@@ -61,26 +65,12 @@ class BookingUpdateForm(forms.ModelForm):
             #self.fields['booking_date'].widget.attrs['hidden'] = True
             print(f"* - Event: {instance.event}")
             booked_attendees = Attendance.objects.filter(booking=instance)
+#            self.fields['attendees'].queryset = booked_attendees
             print(f"* - Booked Attendees: {booked_attendees}")
 
             # This should be the Attendance objects, to pre-set the booked or not.
             self.fields['attendees'].queryset = FamilyMember.objects.filter(family=user)
 
-#            self.fields['attendees'].queryset = booked_attendees
 
         else:
             print(f"* <BookingUpdateForm>: Updating booked family members for booking: No booking!")
-
-    # def clean(self):
-    #     print(f"* <<BookingUpdateForm clean>>")
-    #     super().clean()
-    #     print(f"* <BookingUpdateForm>: Form Data: {self.data}")
-
-
-# class AttendanceForm(forms.ModelForm):
-#
-#     class Meta:
-#         model = Attendance
-#         fields = ('family_member', 'attended')
-
-

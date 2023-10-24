@@ -33,5 +33,8 @@ class Attendance(models.Model):
     # booked = models.BooleanField("Booked for event?", default=False)
     attended = models.BooleanField("Attended event?", default=False)
 
+    class Meta:
+        unique_together = ('booking', 'family_member',)
+
     def __str__(self):
         return f"{self.family_member} - {self.attended}"

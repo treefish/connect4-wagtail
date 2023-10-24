@@ -4,6 +4,12 @@
     {% if booking %}
     <p>{{ booking.event }}</p>
     <p>{{ booking.event.start_date|date:'j/m/Y' }}</p>
+        <p>Currently Booked Family Members:</p>
+    <ul>
+    {% for attendee in booking.attendance_set.all %}
+        <li>{{ attendee.family_member }}</li>
+    {% endfor %}
+    </ul>
     {% endif %}
     <form method="POST">
         {% csrf_token %}
