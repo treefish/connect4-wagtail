@@ -2,8 +2,7 @@ from django.utils import timezone
 
 from django.http.response import HttpResponse, HttpResponseNotAllowed
 from django.shortcuts import get_object_or_404, redirect, render
-
-
+from django.utils import timezone
 from django.views import View
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
@@ -129,6 +128,12 @@ def update_booking_attendees(request, pk):
     print(f"* <update_booking_attendees>: Updating Booking for {user} for booking {booking}")
     if request.method == "POST":
         if form.is_valid():
+            # Update booking date
+            #booking = form.save(commit=False)
+            booking.booking_date = timezone.now()
+            booking.save()
+
+
             # Remove current bookings
             booked_attendees.delete()
 
@@ -148,6 +153,7 @@ def update_booking_attendees(request, pk):
         else:
             return render(request, "bookings/partials/booking_form.html", context={
                 "form": form,
+                "booking": booking
             })
     else:
         print(f"* <update_booking_attendees>: Need to pre-populate form & booking (Attendance)")

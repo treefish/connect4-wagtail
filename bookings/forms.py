@@ -51,6 +51,7 @@ class BookingUpdateForm(forms.ModelForm):
     class Meta:
         model = Booking
         fields = ('booking_date',)
+        widgets = {'booking_date': forms.HiddenInput()}
 
     def __init__(self, user=None, instance=None, *args, **kwargs):
         print(f"* <<BookingUpdateForm init>>")
