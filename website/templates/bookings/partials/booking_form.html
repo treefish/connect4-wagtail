@@ -11,6 +11,7 @@
     {% endfor %}
     </ul>
     {% endif %}
+    <p>Please confirm <b>ALL</b> family members attending this event:</p>
     <form method="POST">
         {% csrf_token %}
         {{ form|crispy }}
