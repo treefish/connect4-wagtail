@@ -108,7 +108,7 @@ class ChildMore(models.Model):
     family_member = models.OneToOneField(FamilyMember, on_delete=models.CASCADE)
     dob = models.DateField('Date of Birth')
     gender = models.CharField('Gender', max_length=6, choices=Gender.choices, default=base_gender)
-    school = models.TextField("School", max_length=100, null=True, blank=True)
+    school = models.CharField("School", max_length=100, null=True, blank=True)
     fsm = models.BooleanField("Free School Meal?", default = False )
     sen_req = models.BooleanField("SEN Requirements?", default = False )
     sen_detail = models.TextField("SEN Requirements", max_length=1024, null=True, blank=True)
