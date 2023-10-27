@@ -188,7 +188,15 @@ class ChildMore(models.Model):
             errors["dob"] = "Date of Birth is in the future. A time traveller?"
 
         if self.is_post_teen:
-            errors["dob"] = "Date of Birth makes this Child too old to be considered as such. Please add this person as a parent (adult)"
+            if self.is_immortal:
+                errors[
+                    "dob"] = "Date of Birth makes this Child nigh immortal. Please check your date."
+            elif self.is_too_old:
+                errors[
+                    "dob"] = "Date of Birth makes this Child an adult. Please add this person as a parent (adult)"
+            else:
+                errors["dob"] = "Date of Birth makes this Child too old to be considered as such. Please add this person as a parent (adult)"
+
 
         if errors:
             raise ValidationError(errors)
