@@ -1,9 +1,9 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
-
+from django.utils import timezone
 from dateutil.relativedelta import relativedelta
-from datetime import *
+from datetime import date, datetime
 
 User = get_user_model()
 
@@ -115,24 +115,42 @@ class ChildMore(models.Model):
 
     @property
     def years_old(self):
-        date_diff = relativedelta(datetime.today(), self.dob)
+        today_datetime = timezone.now()
+        today = datetime.date(today_datetime)
+        date_diff = relativedelta(today, self.dob)
         return date_diff.years
 
     # Note: In Master spreadsheet the designations are different from here and Attendance Register Daily
     # Location  < 4          4-10        11-16       >16
     # Master    Toddler      Primary     Secondary
-    # Here      Youngster    Child       Teenager    Post-Teen
+    # Here      Toddler      Child       Teenager    Post-Teen
     # Daily     < 4          4-10        Teenager
     # For next clean up, will look to harmonise terminology.
 
+    '''
+    Dates
+    today_datetime = timezone.now()
+    today = datetime.date(today_datetime)
+    dob > today
+    '''
+
     @property
     def is_teenager(self):
-        teenager = self.years_old in range(11, 17) # 11-16
-        return teenager
+        return self.years_old in range(11, 17)  # 11-16
+
+    @property
+    def is_secondary(self):
+        # Same as 'teenager', 'secondary' is used in reports.
+        return self.years_old in range(11, 17) # 11-16
 
     @property
     def is_child(self):
         # This definition of child is a Child between 4 and 10 (as required by reports)
+        return self.years_old in range(4, 11)
+
+    @property
+    def is_primary(self):
+        # Same as 'child', 'primary' is used in reports.
         return self.years_old in range(4, 11)
 
     @property
@@ -147,7 +165,9 @@ class ChildMore(models.Model):
     @property
     def is_time_traveller(self):
         # DoB is in the future!
-        return self.dob > datetime.now().date()
+        today_datetime = timezone.now()
+        today = datetime.date(today_datetime)
+        return self.dob > today
 
     @property
     def is_too_old(self):
@@ -164,12 +184,68 @@ class ChildMore(models.Model):
         if self.sen_req and not self.sen_detail:
             errors["sen_detail"] = "If SEN Requirements is ticked, SEN Details must be filled in."
 
+        if self.is_time_traveller:
+            errors["dob"] = "Date of Birth is in the future. A time traveller?"
+
+        if self.is_post_teen:
+            errors["dob"] = "Date of Birth makes this Child too old to be considered as such. Please add this person as a parent (adult)"
+
         if errors:
             raise ValidationError(errors)
 
     def __str__(self):
         return f"{self.dob} - {self.gender} - {self.fsm}"
 
+'''
+>>> child = Child.objects.get(id=2)
+SELECT "registration_familymember"."id",
+       "registration_familymember"."created_at",
+       "registration_familymember"."updated_at",
+       "registration_familymember"."family_id",
+       "registration_familymember"."type",
+       "registration_familymember"."first_name",
+       "registration_familymember"."last_name",
+       "registration_familymember"."diet_req",
+       "registration_familymember"."diet_detail",
+       "registration_familymember"."medical_req",
+       "registration_familymember"."medical_detail"
+  FROM "registration_familymember"
+ WHERE ("registration_familymember"."type" = 'CHILD' AND "registration_familymember"."id" = 2)
+ LIMIT 21
+Execution time: 0.001513s [Database: default]
+>>> child
+<Child: Junior Deimos>
+>>> child.childmore.dob
+SELECT "registration_childmore"."id",
+       "registration_childmore"."family_member_id",
+       "registration_childmore"."dob",
+       "registration_childmore"."gender",
+       "registration_childmore"."school",
+       "registration_childmore"."fsm",
+       "registration_childmore"."sen_req",
+       "registration_childmore"."sen_detail"
+  FROM "registration_childmore"
+ WHERE "registration_childmore"."family_member_id" = 2
+ LIMIT 21
+Execution time: 0.001186s [Database: default]
+datetime.date(2013, 10, 11)
+>>> child.childmore.years_old
+10
+>>> child.childmore.is_teenager
+False
+>>> child.childmore.is_child
+True
+>>> child.childmore.is_toddler
+False
+>>> child.childmore.is_post_teen
+False
+>>> child.childmore.is_time_traveller
+False
+>>> child.childmore.is_immortal
+False
+>>> child.childmore.is_too_old
+False
+'''
 
 class Child(FamilyMember):
     base_type = FamilyMember.Types.CHILD
