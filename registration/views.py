@@ -63,7 +63,7 @@ def create_family_member_form(request):
 
 def create_family_member_child_form(request):
     form = FamilyMemberForm(initial={'type': FamilyMember.Types.CHILD})
-    child_form = FamilyMemberChildForm
+    child_form = FamilyMemberChildForm(initial={'fsm': None})
     context = {
         "form": form,
         "child_form": child_form
@@ -87,10 +87,13 @@ def update_family_member(request, pk):
         childmore = family_member.childmore
         child_form = FamilyMemberChildForm(request.POST or None, instance=childmore)
     else:
+        print("* FamilyMember is PARENT")
         child_form = FamilyMemberForm(None)
 
     if request.method == "POST":
+        print("* Request is POST")
         if form.is_valid():
+            print("* Form is VALID")
             family_member = form.save(commit=False)
             if family_member.type == FamilyMember.Types.PARENT:
                 print("* Processing PARENT form")
@@ -111,12 +114,17 @@ def update_family_member(request, pk):
                     return render(request, "registration/partials/family_member_form.html", context={
                         "form": form,
                         "child_form": child_form,
+                        "family_member": family_member
                     })
         else:
+            print("* Form is INVALID!")
             return render(request, "registration/partials/family_member_form.html", context={
                 "form": form,
                 "child_form": child_form,
+                "family_member": family_member
             })
+    else:
+        print("* Request is GET")
 
     context = {
         "form": form,
@@ -127,16 +135,18 @@ def update_family_member(request, pk):
     return render(request, "registration/partials/family_member_form.html", context)
 
 
-def delete_family_member(request, pk):
-    family_member = get_object_or_404(FamilyMember, id=pk)
-
-    if request.method == "POST":
-        family_member.delete()
-        return HttpResponse("")
-
-    return HttpResponseNotAllowed(
-        [
-            "POST",
-        ]
-    )
+# No removal of Family members allowed at this stage.
+# Ref: Video meeting with Flo, 26 Oct 2023
+# def delete_family_member(request, pk):
+#     family_member = get_object_or_404(FamilyMember, id=pk)
+#
+#     if request.method == "POST":
+#         family_member.delete()
+#         return HttpResponse("")
+#
+#     return HttpResponseNotAllowed(
+#         [
+#             "POST",
+#         ]
+#     )
 

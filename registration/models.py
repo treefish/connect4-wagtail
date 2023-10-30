@@ -111,7 +111,7 @@ class ChildMore(models.Model):
     school = models.CharField("School", max_length=100, null=True, blank=True)
     fsm = models.BooleanField("Free School Meal?", default = False )
     sen_req = models.BooleanField("SEN Requirements?", default = False )
-    sen_detail = models.TextField("SEN Requirements", max_length=1024, null=True, blank=True)
+    sen_detail = models.TextField("SEN Details", max_length=1024, null=True, blank=True)
 
     @property
     def years_old(self):
@@ -167,7 +167,7 @@ class ChildMore(models.Model):
         # DoB is in the future!
         today_datetime = timezone.now()
         today = datetime.date(today_datetime)
-        return self.dob > today
+        return self.dob > today if self.dob else False
 
     @property
     def is_too_old(self):
@@ -182,12 +182,15 @@ class ChildMore(models.Model):
     def clean(self):
         errors = {}
         if self.sen_req and not self.sen_detail:
-            errors["sen_detail"] = "If SEN Requirements is ticked, SEN Details must be filled in."
+            errors["sen_detail"] = "If SEN Requirements is ticked, SEN details must be filled in."
 
-        if self.is_time_traveller:
+        if self.sen_detail and not self.sen_req:
+            errors["sen_req"] = "If SEN details are filled in, SEN Requirements must be ticked."
+
+        if self.dob and self.is_time_traveller:
             errors["dob"] = "Date of Birth is in the future. A time traveller?"
 
-        if self.is_post_teen:
+        if self.dob and self.is_post_teen:
             if self.is_immortal:
                 errors[
                     "dob"] = "Date of Birth makes this Child nigh immortal. Please check your date."
@@ -196,7 +199,6 @@ class ChildMore(models.Model):
                     "dob"] = "Date of Birth makes this Child an adult. Please add this person as a parent (adult)"
             else:
                 errors["dob"] = "Date of Birth makes this Child too old to be considered as such. Please add this person as a parent (adult)"
-
 
         if errors:
             raise ValidationError(errors)

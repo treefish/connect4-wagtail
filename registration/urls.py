@@ -1,7 +1,8 @@
 from django.contrib import admin
 from django.urls import path
 
-from registration.views import create_family_member, create_family_member_form, detail_family_member, update_family_member, delete_family_member
+from registration.views import create_family_member, create_family_member_form, detail_family_member, update_family_member\
+#    , delete_family_member
 from registration.views import create_family_member_child_form
 
 urlpatterns = [
@@ -12,7 +13,8 @@ urlpatterns = [
          name='create-family-member-child-form'),
     path('htmx/family_member/<pk>/', detail_family_member, name="detail-family-member"),
     path('htmx/family_member/<pk>/update/', update_family_member, name="update-family-member"),
-    path('htmx/family_member/<pk>/delete/', delete_family_member, name="delete-family-member"),
+# No removal of Family members allowed at this stage.
+#    path('htmx/family_member/<pk>/delete/', delete_family_member, name="delete-family-member"),
 
 
 ]

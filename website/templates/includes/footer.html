@@ -28,22 +28,22 @@
             {% cache 2592000 social_footer_sections %}
             {% endcomment %}
             {% if settings.site_settings.SocialMediaSettings.facebook %}
-              <a href="{{ settings.site_settings.SocialMediaSettings.facebook }}" class="cc-footer-social-icon">
+              <a href="{{ settings.site_settings.SocialMediaSettings.facebook }}" class="cc-footer-social-icon" target="_blank">
                 <img src="{% static 'images/facebook.svg' %}" alt="Facebook">
               </a>
             {% endif %}
             {% if settings.site_settings.SocialMediaSettings.twitter %}
-              <a href="{{ settings.site_settings.SocialMediaSettings.twitter }}" class="cc-footer-social-icon">
+              <a href="{{ settings.site_settings.SocialMediaSettings.twitter }}" class="cc-footer-social-icon" target="_blank">
                 <img src="{% static 'images/twitter.svg' %}" alt="Twitter">
               </a>
             {% endif %}
             {% if settings.site_settings.SocialMediaSettings.instagram %}
-              <a href="{{ settings.site_settings.SocialMediaSettings.instagram }}" class="cc-footer-social-icon">
+              <a href="{{ settings.site_settings.SocialMediaSettings.instagram }}" class="cc-footer-social-icon" target="_blank">
                 <img src="{% static 'images/instagram.svg' %}" alt="Instagram">
               </a>
             {% endif %}
             {% if settings.site_settings.SocialMediaSettings.youtube %}
-              <a href="{{ settings.site_settings.SocialMediaSettings.youtube }}" class="cc-footer-social-icon">
+              <a href="{{ settings.site_settings.SocialMediaSettings.youtube }}" class="cc-footer-social-icon" target="_blank">
                 <img src="{% static 'images/youtube.svg' %}" alt="YouTube">
               </a>
             {% endif %}
