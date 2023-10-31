@@ -50,17 +50,19 @@ class FamilyMemberChildForm(forms.ModelForm):
         )
 # this works...        widgets = {'dob': forms.SelectDateWidget(years=range(timezone.now().year - 25, timezone.now().year + 1))}
         widgets = {'dob': forms.widgets.DateInput(attrs={'type': 'date'})}
-        help_texts = {'sen_req': "SEN is Student Extra Needs",
-                      'sen_detail': "Describe SEN details here."}
+        help_texts = {'fsm': "FSM must be explicitly answered as 'Yes' or 'No'",
+                      'sen_req': "SEN/EHCP must be explicitly answered as 'Yes' or 'No'",
+                      'sen_detail': "Describe SEN and/or EHCP details here."}
+
         # https://stackoverflow.com/questions/3468814/python-django-booleanfield-model-with-radioselect-form-default-to-empty
 
 
         # widgets = {'fsm': forms.TypedChoiceField(
-        # label = "Do you like this website?",
-        # choices = ((1, "Yes"), (0, "No")),
+        # label = "Eligible for benefit related Free School Meals (FSM)?????",
+        # choices = ((1, "Yes"), (0, "No"), (None, "-")),
         # coerce = lambda x: bool(int(x)),
         # widget = forms.RadioSelect,
-        # initial = '1',
+        # initial = None,
         # required = True,
         # ) }
 
@@ -69,15 +71,19 @@ class FamilyMemberChildForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(FamilyMemberChildForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.helper.layout = Layout(
-                MultiWidgetField('dob', attrs=({'style': 'width: 33%; display: inline-block;'})),
-                'gender',
 
-                InlineRadios('fsm'),
-                'sen_req',
-                'sen_detail',
-                'school',
-            )
+
+
+
+        # self.helper.layout = Layout(
+        #         MultiWidgetField('dob', attrs=({'style': 'width: 33%; display: inline-block;'})),
+        #         'gender',
+        #
+        #         InlineRadios('fsm'),
+        #         'sen_req',
+        #         'sen_detail',
+        #         'school',
+        #     )
 
 
 

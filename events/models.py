@@ -91,23 +91,6 @@ class ProjectPage(Page):
 # Events
 #
 ########################################################################################################################
-# class EventListingPage(Page):
-#     parent_page_types = ["events.ProjectPage"]
-#     subpage_types = ["events.EventPage"]
-#     max_count = 1
-#
-#     template = "events/event_listing_page.html"
-#     subtitle = models.TextField(blank=True, max_length=500)
-#
-#     content_panels = Page.content_panels + [
-#         FieldPanel("subtitle"),
-#     ]
-#
-#     def get_context(self, request, *args, **kwargs):
-#         context = super().get_context(request, *args, **kwargs)
-#         context["events"] = EventPage.objects.live().public()  # Need to limit to Events in this Project
-#         return context
-
 
 class EventType(models.Model):
     name = models.CharField(max_length=100)
@@ -148,9 +131,8 @@ class EventPage(Page):
     # Note: default=timezone.now() for dates
     start_date = models.DateTimeField("Start Date", help_text='Event start date/time')
     end_date = models.DateTimeField("End Date", blank=True, null=True, help_text='Event end date/time')
-    event_type = models.CharField(blank=True, max_length=50)
-
-#    event_type = models.ForeignKey(EventType, null=True, on_delete=models.SET_NULL, related_name="event_type") #, default = 1
+#    event_type = models.CharField(blank=True, max_length=50)
+    event_type = models.ForeignKey(EventType, on_delete=models.PROTECT, related_name="event_type", default = 1)
 #    event_website = models.URLField(blank=True, null=True, help_text='Optional external link for the event or programme')
 #    venue = models.ForeignKey(Venue, on_delete=models.CASCADE, related_name="venue", default = 1)
     capacity = models.PositiveSmallIntegerField("Capacity", default=300)  # Default to Venue capacity somehow. Override Save?
@@ -163,7 +145,6 @@ class EventPage(Page):
 
     content_panels = Page.content_panels + [
         FieldPanel("description"),
-
         FieldPanel("internal_page"),
         FieldPanel("external_page"),
         FieldPanel("button_text"),
@@ -175,7 +156,7 @@ class EventPage(Page):
                 FieldPanel("end_date")
             ]
         ),
-        # FieldPanel("event_type"),
+        FieldPanel("event_type"),
         FieldPanel("capacity"),
         FieldPanel("bookable"),
 

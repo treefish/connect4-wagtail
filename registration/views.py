@@ -42,6 +42,8 @@ def create_family_member(request):
                 "form": form,
                 "child_form": child_form,
             })
+    # else:
+    #     child_form.fields['fsm'].initial = None
 
     context = {
         "form": form,
@@ -63,7 +65,7 @@ def create_family_member_form(request):
 
 def create_family_member_child_form(request):
     form = FamilyMemberForm(initial={'type': FamilyMember.Types.CHILD})
-    child_form = FamilyMemberChildForm(initial={'fsm': None})
+    child_form = FamilyMemberChildForm() #initial={'fsm': None})
     context = {
         "form": form,
         "child_form": child_form

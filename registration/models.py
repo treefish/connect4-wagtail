@@ -98,19 +98,28 @@ class ChildManager(models.Manager):
 
 class ChildMore(models.Model):
     class Gender(models.TextChoices):
-        FEMALE = "FEMALE", "Female"
-        MALE = "MALE", "Male"
-        OTHER = "OTHER", "Other"
-        BLANK = "BLANK", "-"
+        FEMALE = "Female", "Female"
+        MALE = "Male", "Male"
+        OTHER = "Other", "Other"
+        BLANK = "Unanswered", "Prefer not to say"
 
     base_gender = Gender.BLANK
 
+    class YesNo(models.TextChoices):
+        YES = 1, "Yes"
+        NO = 0, "No"
+        BLANK = None, "-"
+
+    base_yesno = YesNo.BLANK
+
     family_member = models.OneToOneField(FamilyMember, on_delete=models.CASCADE)
     dob = models.DateField('Date of Birth')
-    gender = models.CharField('Gender', max_length=6, choices=Gender.choices, default=base_gender)
+    gender = models.CharField('Gender', max_length=10, choices=Gender.choices, default=base_gender)
     school = models.CharField("School", max_length=100, null=True, blank=True)
-    fsm = models.BooleanField("Free School Meal?", default = False )
-    sen_req = models.BooleanField("SEN Requirements?", default = False )
+    fsm = models.CharField("Eligible for benefit related Free School Meals (FSM)?", choices = YesNo.choices, default=base_yesno )
+#    sen_req = models.BooleanField("Special educational needs (SEN) or Education health care plan (EHCP)?", default = False )
+    sen_req = models.CharField("Special educational needs (SEN) or Education health care plan (EHCP)?", choices=YesNo.choices,
+                           default=base_yesno)
     sen_detail = models.TextField("SEN Details", max_length=1024, null=True, blank=True)
 
     @property
@@ -181,8 +190,11 @@ class ChildMore(models.Model):
 
     def clean(self):
         errors = {}
-        if self.sen_req and not self.sen_detail:
-            errors["sen_detail"] = "If SEN Requirements is ticked, SEN details must be filled in."
+
+        if self.sen_req == self.base_yesno:
+                errors["sen_req"] = "SEN/EHCP must be explicitly answered as 'Yes' or 'No'"
+        elif not self.sen_detail and self.sen_req == self.YesNo.YES:
+            errors["sen_detail"] = "If SEN Requirements is 'Yes'', SEN details must be filled in."
 
         if self.sen_detail and not self.sen_req:
             errors["sen_req"] = "If SEN details are filled in, SEN Requirements must be ticked."
@@ -199,6 +211,9 @@ class ChildMore(models.Model):
                     "dob"] = "Date of Birth makes this Child an adult. Please add this person as a parent (adult)"
             else:
                 errors["dob"] = "Date of Birth makes this Child too old to be considered as such. Please add this person as a parent (adult)"
+
+        if self.fsm == self.base_yesno:
+                errors["fsm"] = "FSM must be explicitly answered as 'Yes' or 'No'"
 
         if errors:
             raise ValidationError(errors)
