@@ -27,7 +27,7 @@ class FlexPage(Page):
         #("richtext_with_title", blocks.RichTextWithTitleBlock()),
         ("richtext", wagtail_blocks.RichTextBlock(
             template = "streams/simple_richtext_block.html",
-            features = ["bold", "italic", "ol", "ul", "link"])
+            features = ["bold", "italic", "ol", "ul", "link", "document-link"])
         ),
         ("large_image", ImageChooserBlock(
             help_text = "Ths image will be cropped to 1200px by 775px.",

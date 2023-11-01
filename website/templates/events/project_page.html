@@ -24,7 +24,11 @@
     </div>
 
     <div class="row mt-4">
-    {% for card in events %}
+        {% comment %}
+        {% for card in events %}
+        {% endcomment %}
+    {% for card in page.get_children %}
+    {% with card=card.specific %}
     <div class="col-md-6 d-flex align-items-stretch">
       <div class="card mb-3 text-center">
         <a href="{{ card.url }}">
@@ -50,6 +54,7 @@
         </div>
       </div>
     </div>
+    {% endwith %}
     {% endfor %}
     </div>
 
