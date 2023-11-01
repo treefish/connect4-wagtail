@@ -118,7 +118,8 @@ class ChildMore(models.Model):
     school = models.CharField("School", max_length=100, null=True, blank=True)
 #    fsm_char = models.CharField("Eligible for benefit related Free School Meals (FSM)?", choices = YesNo.choices, default=base_yesno )
     fsm = models.BooleanField("Eligible for benefit related Free School Meals (FSM)?", null=True)
-    sen_req = models.CharField("Special educational needs (SEN) or Education health care plan (EHCP)?", choices=YesNo.choices,
+    sen_req = models.BooleanField("Special educational needs (SEN) or Education health care plan (EHCP)?", null=True)
+    sen_req_old = models.CharField("Special educational needs (SEN) or Education health care plan (EHCP)?", choices=YesNo.choices,
                            default=base_yesno)
     sen_detail = models.TextField("SEN Details", max_length=1024, null=True, blank=True)
 
@@ -191,9 +192,9 @@ class ChildMore(models.Model):
     def clean(self):
         errors = {}
 
-        if self.sen_req == self.base_yesno:
+        if self.sen_req == None: #self.base_yesno:
                 errors["sen_req"] = "SEN/EHCP must be explicitly answered as 'Yes' or 'No'"
-        elif not self.sen_detail and self.sen_req == self.YesNo.YES:
+        elif not self.sen_detail and self.sen_req:
             errors["sen_detail"] = "If SEN Requirements is 'Yes'', SEN details must be filled in."
 
         if self.sen_detail and not self.sen_req:

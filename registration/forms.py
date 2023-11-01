@@ -46,7 +46,8 @@ class FamilyMemberChildForm(forms.ModelForm):
             'gender',
             'school',
             'fsm',
-            'sen_req', 'sen_detail',
+            'sen_req',
+            'sen_detail',
         )
 # this works...        widgets = {'dob': forms.SelectDateWidget(years=range(timezone.now().year - 25, timezone.now().year + 1))}
         BOOLEAN_CHOICES = ((True, 'Yes'), (False, 'No'))
