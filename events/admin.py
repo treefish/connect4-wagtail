@@ -7,13 +7,13 @@ class EventPageInline(admin.StackedInline):
     model = EventPage
 
 
-class EventTypeAdmin(admin.ModelAdmin):
-    list_display = ("name",)
-    # search_fields = ["name"]
-
-    inlines = (EventPageInline,)
-
-admin.site.register(EventType, EventTypeAdmin)
+# class EventTypeAdmin(admin.ModelAdmin):
+#     list_display = ("name",)
+#     # search_fields = ["name"]
+#
+#     inlines = (EventPageInline,)
+#
+# admin.site.register(EventType, EventTypeAdmin)
 
 #
 # class AttendanceInline(admin.TabularInline):

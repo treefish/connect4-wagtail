@@ -132,7 +132,7 @@ class EventPage(Page):
     start_date = models.DateTimeField("Start Date", help_text='Event start date/time')
     end_date = models.DateTimeField("End Date", blank=True, null=True, help_text='Event end date/time')
 #    event_type = models.CharField(blank=True, max_length=50)
-    event_type = models.ForeignKey(EventType, on_delete=models.PROTECT, related_name="event_type", default = 1)
+#    event_type = models.ForeignKey(EventType, on_delete=models.PROTECT, related_name="event_type", default = 1)
 #    event_website = models.URLField(blank=True, null=True, help_text='Optional external link for the event or programme')
 #    venue = models.ForeignKey(Venue, on_delete=models.CASCADE, related_name="venue", default = 1)
     capacity = models.PositiveSmallIntegerField("Capacity", default=300)  # Default to Venue capacity somehow. Override Save?
@@ -156,7 +156,7 @@ class EventPage(Page):
                 FieldPanel("end_date")
             ]
         ),
-        FieldPanel("event_type"),
+#        FieldPanel("event_type"),
         FieldPanel("capacity"),
         FieldPanel("bookable"),
 
