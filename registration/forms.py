@@ -49,7 +49,10 @@ class FamilyMemberChildForm(forms.ModelForm):
             'sen_req', 'sen_detail',
         )
 # this works...        widgets = {'dob': forms.SelectDateWidget(years=range(timezone.now().year - 25, timezone.now().year + 1))}
-        widgets = {'dob': forms.widgets.DateInput(attrs={'type': 'date'})}
+        BOOLEAN_CHOICES = ((True, 'Yes'), (False, 'No'))
+        widgets = {'dob': forms.widgets.DateInput(attrs={'type': 'date'}),
+#                   'fsm': forms.widgets.NullBooleanSelect()
+                   }
         help_texts = {'fsm': "FSM must be explicitly answered as 'Yes' or 'No'",
                       'sen_req': "SEN/EHCP must be explicitly answered as 'Yes' or 'No'",
                       'sen_detail': "Describe SEN and/or EHCP details here."}
@@ -72,7 +75,16 @@ class FamilyMemberChildForm(forms.ModelForm):
         super(FamilyMemberChildForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
 
-
+#        BOOLEAN_CHOICES = (('1', 'Yes'), ('0', 'No'))
+        # Filtering fields
+       #self.fields['fsm'] = forms.ChoiceField(
+        # widgets = {'fsm': forms.ChoiceField(
+        #     label="FSM label",
+        #     # uses items in BOOLEAN_CHOICES
+        #     choices=BOOLEAN_CHOICES,
+        #     widget=forms.RadioSelect
+        #     )
+        # }
 
 
         # self.helper.layout = Layout(

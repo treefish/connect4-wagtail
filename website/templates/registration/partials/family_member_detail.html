@@ -8,7 +8,7 @@
     {% if family_member.type == 'CHILD' %}
     <p class="text-gray-600">Date of Birth: {{ family_member.childmore.dob|date:'j F Y' }}</p>
     <p class="text-gray-600">Gender: {{ family_member.childmore.gender }}</p>
-    <p class="text-gray-600">Free School Meals?: {{ family_member.childmore.fsm }}</p>
+    <p class="text-gray-600">Free School Meals (FSM)?: {{ family_member.childmore.fsm|yesno:"Yes,No" }}</p>
     {% endif %}
     <p class="text-gray-600">Dietary: {{ family_member.diet_req|yesno:"Yes,No" }}
     {% if family_member.diet_req %}

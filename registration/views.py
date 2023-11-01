@@ -25,10 +25,13 @@ def create_family_member(request):
             elif family_member.type == FamilyMember.Types.CHILD:
                 print("* Processing CHILD form")
                 if child_form.is_valid():
+                    print(f"* childmore form: {child_form}")
                     family_member.type = FamilyMember.Types.CHILD
                     family_member.save()
                     childmore = child_form.save(commit=False)
+                    print(f"* childmore FSM: {childmore.fsm}")
                     childmore.family_member = family_member
+
                     childmore.save()
 
                     return redirect("detail-family-member", pk=family_member.id)

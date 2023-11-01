@@ -106,8 +106,8 @@ class ChildMore(models.Model):
     base_gender = Gender.BLANK
 
     class YesNo(models.TextChoices):
-        YES = 1, "Yes"
-        NO = 0, "No"
+        YES = "Yes", "Yes"
+        NO = "No", "No"
         BLANK = None, "-"
 
     base_yesno = YesNo.BLANK
@@ -116,8 +116,8 @@ class ChildMore(models.Model):
     dob = models.DateField('Date of Birth')
     gender = models.CharField('Gender', max_length=10, choices=Gender.choices, default=base_gender)
     school = models.CharField("School", max_length=100, null=True, blank=True)
-    fsm = models.CharField("Eligible for benefit related Free School Meals (FSM)?", choices = YesNo.choices, default=base_yesno )
-#    sen_req = models.BooleanField("Special educational needs (SEN) or Education health care plan (EHCP)?", default = False )
+#    fsm_char = models.CharField("Eligible for benefit related Free School Meals (FSM)?", choices = YesNo.choices, default=base_yesno )
+    fsm = models.BooleanField("Eligible for benefit related Free School Meals (FSM)?", null=True)
     sen_req = models.CharField("Special educational needs (SEN) or Education health care plan (EHCP)?", choices=YesNo.choices,
                            default=base_yesno)
     sen_detail = models.TextField("SEN Details", max_length=1024, null=True, blank=True)
@@ -212,7 +212,8 @@ class ChildMore(models.Model):
             else:
                 errors["dob"] = "Date of Birth makes this Child too old to be considered as such. Please add this person as a parent (adult)"
 
-        if self.fsm == self.base_yesno:
+        print(f"* Checking FSM: {self.fsm}")
+        if self.fsm == None:
                 errors["fsm"] = "FSM must be explicitly answered as 'Yes' or 'No'"
 
         if errors:
