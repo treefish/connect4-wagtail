@@ -193,13 +193,13 @@ MEDIA_URL = "/media/"
 
 # This is required for uploading?
 CSRF_TRUSTED_ORIGINS = [
-    'http://pc-s-docker.park.internal',
+    'http://pc-s-docker.park.internal:8014',
     'http://connect4.pcs.hants.sch.uk',
     'https://connect4.org.uk',
 ]
 
 CORS_ORIGIN_WHITELIST = [
-    'http://pc-s-docker.park.internal',
+    'http://pc-s-docker.park.internal:8014',
     'http://connect4.pcs.hants.sch.uk',
     'https://connect4.org.uk',
 ]

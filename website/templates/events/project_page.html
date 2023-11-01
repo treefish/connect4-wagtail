@@ -33,20 +33,21 @@
       <div class="card mb-3 text-center">
         <a href="{{ card.url }}">
           <picture>
-            {% image card.event_image fill-260x112 as card_img %}
+            {% image card.event_image width-640 as card_img %}
             <img src="{{ card_img.url }}" alt="{{ card_img.alt }}" class="lazy card-img-top">
           </picture>
         </a>
         <div class="card-body py-3 px-3">
-          <a href="{{ card.url }}">
-            <h5 class="card-title">{{ card.title }}</h5>
-            <p class="card-description">Start: {{ card.start_date|date:'j/m/Y h:i a' }}</p>
-            <p class="card-description">Finish: {{ card.end_date|date:'j/m/Y h:i a' }}</p>
 
-            {% if card.description %}
-              <p class="card-description">{{ card.description }}</p>
-            {% endif %}
-          </a>
+          <h5 class="card-title">{{ card.title }}</h5>
+
+          <p class="card-description">Start: {{ card.start_date|date:'j/m/Y h:i a' }}</p>
+          <p class="card-description">Finish: {{ card.end_date|date:'j/m/Y h:i a' }}</p>
+
+          {% if card.description %}
+            <p class="card-description">{{ card.description }}</p>
+          {% endif %}
+
 
           <p class="card-text">
             <a href="{{ card.url }}" class="btn btn-link d-inline">More Details</a>
