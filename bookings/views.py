@@ -7,6 +7,7 @@ from django.views import View
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.urls import reverse, reverse_lazy
+from django.core.mail import EmailMessage
 from django.contrib.auth import get_user_model
 from .models import Booking, Attendance
 from .forms import BookingForm, BookingUpdateForm
@@ -55,6 +56,44 @@ def available_events(user):
     return available_events
 
 
+def send_booking_email(booking):
+    event = booking.event
+    user = booking.family
+    attendees = booking.attendance_set.all()
+    # import itertools
+    names = set(f"{attendee.family_member.first_name} {attendee.family_member.last_name}" for attendee in attendees)
+    attendee_names = ", ".join(names)
+
+    recipients = [user.email]
+    bcc = ["wagtail@treefish.co.nz"]
+    subject = "Connect4Families Event Booking"
+    body = f'''
+    Hello {user.first_name},
+
+    You have successfully booked for the following Connect4Families event: 
+
+      Event: {event}
+      Date: {event.start_date.strftime("%d/%m/%Y")}
+      Time: {event.start_date.strftime("%H:%M %p")} - {event.end_date.strftime("%H:%M %p")}
+
+    The following people are booked to come to this event:
+
+      {attendee_names}
+
+    Please arrive in time to complete checking-in and prepare for the event. If you cannot make it to the event, please cancel as soon as possible on-line to allow other families to book and attend.
+
+    We look forward to seeing you.
+
+    Regards
+    Connect4Familes team
+    '''
+
+    email = EmailMessage(subject, body, "wagtail@treefish.co.nz", recipients, bcc)
+    #    reply_to=["another@example.com"],
+    #    headers={"Message-ID": "foo"},
+    email.send()
+
+
 def create_booking(request):
     print(f"* <<create_booking>>")
     user = User.objects.get(id=request.user.id)
@@ -67,6 +106,7 @@ def create_booking(request):
             booking = form.save(commit=False)
             booking.family = user
             booking.save()
+            send_booking_email(booking=booking)
 
             # handle list of ticked booked family members.
             # This is hacking! Must be a cleaner way to do this.
