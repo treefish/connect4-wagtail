@@ -6,6 +6,7 @@ from wagtail.models import Page
 from wagtail.fields import StreamField
 from wagtail.admin.panels import FieldPanel
 from wagtail.snippets.blocks import SnippetChooserBlock
+from wagtail.images.blocks import ImageChooserBlock
 from streams import blocks
 
 
@@ -73,6 +74,10 @@ class HomePage(Page):
         ("title", blocks.TitleBlock()),
         ("cards", blocks.CardsBlock()),
         ("image_and_text", blocks.ImageAndTextBlock()),
+        ("image", ImageChooserBlock(
+            help_text="Ths image will be cropped to 640px by 480px.",
+            template="streams/image_block.html"
+        )),
         ("cta", blocks.CallToActionBlock()),
         ("testimonial", SnippetChooserBlock(
             target_model="testimonials.Testimonial",
