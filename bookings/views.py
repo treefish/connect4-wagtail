@@ -8,6 +8,7 @@ from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.urls import reverse, reverse_lazy
 from django.core.mail import EmailMessage
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
 from .models import Booking, Attendance
 from .forms import BookingForm, BookingUpdateForm
@@ -94,6 +95,7 @@ def send_booking_email(booking):
     email.send()
 
 
+@login_required
 def create_booking(request):
     print(f"* <<create_booking>>")
     user = User.objects.get(id=request.user.id)
@@ -134,6 +136,7 @@ def create_booking(request):
     return render(request, "bookings/booking_list.html", context)
 
 
+@login_required
 def create_booking_form(request):
     print(f"* <<create_booking_form>>")
     user = User.objects.get(id=request.user.id)
@@ -145,6 +148,7 @@ def create_booking_form(request):
     return render(request, "bookings/partials/booking_form.html", context)
 
 
+@login_required
 def detail_booking(request, pk):
     print(f"* <<detail_booking>>")
     booking = get_object_or_404(Booking, id=pk)
@@ -157,6 +161,7 @@ def detail_booking(request, pk):
     return render(request, "bookings/partials/booking_detail.html", context)
 
 
+@login_required
 def update_booking_attendees(request, pk):
     print(f"* <<update_booking_attendees>>")
     user = User.objects.get(id=request.user.id)
@@ -202,6 +207,7 @@ def update_booking_attendees(request, pk):
     return render(request, "bookings/partials/booking_form.html", context)
 
 
+@login_required
 def delete_booking(request, pk):
     booking = get_object_or_404(Booking, id=pk)
 
