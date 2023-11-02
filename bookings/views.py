@@ -108,8 +108,7 @@ def create_booking(request):
             booking.save()
             send_booking_email(booking=booking)
 
-            # handle list of ticked booked family members.
-            # This is hacking! Must be a cleaner way to do this.
+            # Handle list of ticked booked family members.
             booked_attendees = request.POST.getlist('attendees')
             for id in booked_attendees:
                 family_member = FamilyMember.objects.get(id=id)
@@ -172,13 +171,10 @@ def update_booking_attendees(request, pk):
             #booking = form.save(commit=False)
             booking.booking_date = timezone.now()
             booking.save()
-
-
+            send_booking_email(booking=booking)
             # Remove current bookings
             booked_attendees.delete()
-
             # handle list of ticked booked family members.
-            # This is hacking! Must be a cleaner way to do this.
             booked_attendees = request.POST.getlist('attendees')
             for id in booked_attendees:
                 family_member = FamilyMember.objects.get(id=id)
@@ -197,7 +193,6 @@ def update_booking_attendees(request, pk):
             })
     else:
         print(f"* <update_booking_attendees>: Need to pre-populate form & booking (Attendance)")
-
 
     context = {
         "form": form,

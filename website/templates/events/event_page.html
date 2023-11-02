@@ -18,11 +18,11 @@
 
             <a href="{% url 'book-event' page.id %}" class="btn btn-primary btn-lg mb-2 mb-lg-0">Book</a>
             {% endcomment %}
-            <a href="{% url 'bookings' %}" class="btn btn-primary btn-lg mb-2 mb-lg-0">Book (TODO)</a>
+            <a href="{% url 'bookings' %}" class="btn btn-primary btn-lg mb-2 mb-lg-0">Bookings</a>
         </div>
         <div class="col-lg-6">
           <picture>
-              {% image page.event_image fill-260x112 as img %}
+              {% image page.event_image width-800 as img %}
               <img src="{{ img.url }}" style="width: 100%; height=:auto;" alt=""{{ img.alt }}">
           </picture>
         </div>
