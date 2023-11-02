@@ -163,6 +163,7 @@ up
 down
 build
 csu
+csf
 logs
 mm
 gsk
@@ -171,4 +172,4 @@ docker-compose.dev.yml
 
 # Wagtail
 media
-staticfiles
+static
