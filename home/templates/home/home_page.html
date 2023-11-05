@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load wagtailimages_tags wagtailcore_tags cache %}
+{% load static wagtailimages_tags wagtailcore_tags cache %}
 
 {% block banner %}
 {% image page.banner_background_image fill-1600x800 as bg_img %}
@@ -40,3 +40,13 @@
   {% endif %}
 
 {% endblock %}
+
+{% block mascot %}
+<div class="row my-4">
+    <div class="col-sm-12">
+        <picture>
+            <img src="{% static '/images/Hexagon-and-Diamond-Together.gif' %}" alt="Hexagon and Diamond Together" style="width: 100%; height: auto;">
+        </picture>
+    </div>
+</div>
+{% endblock mascot %}
