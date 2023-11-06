@@ -168,6 +168,8 @@ logs
 mm
 gsk
 shell
+wag
+red
 docker-compose.dev.yml
 
 # Wagtail
