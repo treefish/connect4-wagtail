@@ -256,4 +256,14 @@ ACCOUNT_USERNAME_MIN_LENGTH = 5
 # https://django-crispy-forms.readthedocs.io/en/latest/install.html#template-packs
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
+# CELERY STUFF
+CELERY_BROKER_URL = 'redis://connect4-redis:6379'
+CELERY_RESULT_BACKEND = 'redis://connect4-redis:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Pacific/Auckland'
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
+
 # Override settings in dev.py and production.py

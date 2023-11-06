@@ -7,8 +7,10 @@ from django.views import View
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.urls import reverse, reverse_lazy
-from django.core.mail import EmailMessage
+# from django.core.mail import EmailMessage
 from django.contrib.auth.decorators import login_required
+
+from .tasks import send_booking_email_task, adding_task
 from django.contrib.auth import get_user_model
 from .models import Booking, Attendance
 from .forms import BookingForm, BookingUpdateForm
@@ -16,7 +18,6 @@ from events.models import EventPage
 from registration.models import FamilyMember
 
 User = get_user_model()
-
 
 class BookingsBaseView(View):
     model = Booking
@@ -57,42 +58,42 @@ def available_events(user):
     return available_events
 
 
-def send_booking_email(booking):
-    event = booking.event
-    user = booking.family
-    attendees = booking.attendance_set.all()
-    # import itertools
-    names = set(f"{attendee.family_member.first_name} {attendee.family_member.last_name}" for attendee in attendees)
-    attendee_names = ", ".join(names)
-
-    recipients = [user.email]
-    bcc = ["wagtail@treefish.co.nz"]
-    subject = "Connect4Families Event Booking"
-    body = f'''
-    Hello {user.first_name},
-
-    You have successfully booked for the following Connect4Families event: 
-
-      Event: {event}
-      Date: {event.start_date.strftime("%d/%m/%Y")}
-      Time: {event.start_date.strftime("%H:%M %p")} - {event.end_date.strftime("%H:%M %p")}
-
-    The following people are booked to come to this event:
-
-      {attendee_names}
-
-    Please arrive in time to complete checking-in and prepare for the event. If you cannot make it to the event, please cancel as soon as possible on-line to allow other families to book and attend.
-
-    We look forward to seeing you.
-
-    Regards
-    Connect4Familes team
-    '''
-
-    email = EmailMessage(subject, body, "wagtail@treefish.co.nz", recipients, bcc)
-    #    reply_to=["another@example.com"],
-    #    headers={"Message-ID": "foo"},
-    email.send()
+# def send_booking_email(booking):
+#     event = booking.event
+#     user = booking.family
+#     attendees = booking.attendance_set.all()
+#     # import itertools
+#     names = set(f"{attendee.family_member.first_name} {attendee.family_member.last_name}" for attendee in attendees)
+#     attendee_names = ", ".join(names)
+#
+#     recipients = [user.email]
+#     bcc = ["wagtail@treefish.co.nz"]
+#     subject = "Connect4Families Event Booking"
+#     body = f'''
+#     Hello {user.first_name},
+#
+#     You have successfully booked for the following Connect4Families event:
+#
+#       Event: {event}
+#       Date: {event.start_date.strftime("%d/%m/%Y")}
+#       Time: {event.start_date.strftime("%H:%M %p")} - {event.end_date.strftime("%H:%M %p")}
+#
+#     The following people are booked to come to this event:
+#
+#       {attendee_names}
+#
+#     Please arrive in time to complete checking-in and prepare for the event. If you cannot make it to the event, please cancel as soon as possible on-line to allow other families to book and attend.
+#
+#     We look forward to seeing you.
+#
+#     Regards
+#     Connect4Familes team
+#     '''
+#
+#     email = EmailMessage(subject, body, "wagtail@treefish.co.nz", recipients, bcc)
+#     #    reply_to=["another@example.com"],
+#     #    headers={"Message-ID": "foo"},
+#     email.send()
 
 
 @login_required
@@ -108,7 +109,9 @@ def create_booking(request):
             booking = form.save(commit=False)
             booking.family = user
             booking.save()
-            send_booking_email(booking=booking)
+            ans = adding_task.delay(3, 7)
+            # Cannot send an object to a task - https://stackoverflow.com/questions/49373825/kombu-exceptions-encodeerror-user-is-not-json-serializable
+            send_booking_email_task.delay(booking.id)
 
             # Handle list of ticked booked family members.
             booked_attendees = request.POST.getlist('attendees')
@@ -176,7 +179,7 @@ def update_booking_attendees(request, pk):
             #booking = form.save(commit=False)
             booking.booking_date = timezone.now()
             booking.save()
-            send_booking_email(booking=booking)
+            send_booking_email_task.delay(booking.id)
             # Remove current bookings
             booked_attendees.delete()
             # handle list of ticked booked family members.
