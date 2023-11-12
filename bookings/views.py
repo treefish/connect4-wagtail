@@ -10,7 +10,7 @@ from django.urls import reverse, reverse_lazy
 # from django.core.mail import EmailMessage
 from django.contrib.auth.decorators import login_required
 
-from .tasks import send_booking_email_task, adding_task
+from .tasks import send_booking_email_task #, adding_task
 from django.contrib.auth import get_user_model
 from .models import Booking, Attendance
 from .forms import BookingForm, BookingUpdateForm

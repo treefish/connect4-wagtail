@@ -166,7 +166,7 @@ TIME_ZONE = "NZ"
 USE_I18N = True
 USE_L10N = False
 USE_TZ = True
-DATE_FORMAT = "j N Y"
+DATE_FORMAT = "j M Y"
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
@@ -262,7 +262,7 @@ CELERY_RESULT_BACKEND = 'redis://connect4-redis:6379'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TIMEZONE = 'Pacific/Auckland'
+CELERY_TIMEZONE = 'Europe/London'
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
 
