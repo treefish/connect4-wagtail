@@ -6,7 +6,7 @@ services:
       context: ./nginx
       dockerfile: Dockerfile
     restart: unless-stopped
-    container_name: connect4-wagtail-nginx
+    container_name: connect4-nginx
     depends_on:
       - wagtail
     env_file:
@@ -25,28 +25,56 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     container_name: connect4-wagtail
-    depends_on:
-      - db
-    env_file:
-      - ./.env
-    expose:
-      - 8000
-    #command : wait-for-it.sh db:5432 -- python manage.py runserver 0.0.0.0:8000
-    command : wait-for-it.sh db:5432 -- gunicorn website.wsgi:application -w 2 --threads=4 --worker-class=gthread --bind 0.0.0.0:8000 --timeout 120
-    #command : wait-for-it.sh db:5432 -- gunicorn website.wsgi:application --config env/etc/gunicorn/conf.py
     volumes:
-      - ./env:/env
       - .:/app/:consistent
       - ./wait-for-it.sh:/usr/local/bin/wait-for-it.sh
+    expose:
+      - 8000
+    ports:
+      - 8587:587
+    #command : wait-for-it.sh db:5432 -- python manage.py runserver 0.0.0.0:8000
+    command : wait-for-it.sh db:5432 -- gunicorn website.wsgi:application -w 2 --bind 0.0.0.0:8000 --timeout 120
+    env_file:
+      - ./.env
+    depends_on:
+      - db
 
   db:
     image: postgres:15.2
     restart: unless-stopped
     container_name: connect4-wagtail-db
-    env_file:
-      - ./.env
     volumes:
       - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - ./.env
+
+  redis:
+    restart: unless-stopped
+    container_name: connect4-redis
+    image: redis:latest
+    expose:
+      - 6379
+    volumes:
+      - redisdata:/data
+
+  celery:
+    restart: unless-stopped
+    container_name: connect4-celery
+    build:
+      context: .
+    ports:
+      - 8588:587
+    command: celery -A website worker -l INFO
+    volumes:
+      - .:/app
+    env_file:
+      - ./.env
+    depends_on:
+      - db
+      - redis
+      - wagtail
+
 
 volumes:
   postgres_data:
+  redisdata:

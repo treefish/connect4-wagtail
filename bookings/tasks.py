@@ -2,11 +2,11 @@ from celery import shared_task
 from django.core.mail import EmailMessage
 from bookings.models import Booking
 
-# @shared_task
-# def adding_task(x, y):
-#     ans = x + y
-#     print(f"* Celery task: Adding - {x} + {y} = {ans}")
-#     return ans
+@shared_task
+def adding_task(x, y):
+    ans = x + y
+    print(f"* Celery task: Adding - {x} + {y} = {ans}")
+    return ans
 
 
 @shared_task()
