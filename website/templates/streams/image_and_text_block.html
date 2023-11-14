@@ -7,7 +7,7 @@
             <div class="cc-iat cc-iat--{{ self.image_alignment }}">
                 <div class="cc-iat-image">
                     {% if self.link.url %}
-                      <a href="{{self.link.url}}" class="d-block">
+                      <a href="{{self.link.url}}" class="d-block" target="_blank">
                     {% endif %}
                         <picture>
                             {% image self.image fill-786x552 as img %}
@@ -25,7 +25,7 @@
                       </p>
                     {% endif %}
                     {% if self.link.url %}
-                      <a href="{{self.link.url}}" class="btn btn-light btn-lg" style="padding-left: 3rem; padding-right: 3rem;">
+                      <a href="{{self.link.url}}" class="btn btn-light btn-lg" style="padding-left: 3rem; padding-right: 3rem;" target="_blank">
                       {{ self.link.link_text }}
                       </a>
                     {% endif %}
