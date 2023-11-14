@@ -29,7 +29,7 @@
         </div>
         <div class="col-lg-4">
           <picture>
-              {% image page.event_image width-800 as img %}
+              {% image page.event_image max-800x400 as img %}
               <img src="{{ img.url }}" style="width: 100%; height=:auto;" alt=""{{ img.alt }}">
           </picture>
         </div>
