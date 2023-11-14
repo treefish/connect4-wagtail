@@ -10,8 +10,8 @@
                       <a href="{{self.link.url}}" class="d-block" target="_blank">
                     {% endif %}
                         <picture>
-                            {% image self.image fill-786x552 as img %}
-                            <img src="{{ img.url }}" alt="{{ img.alt }}" style="width: 100%; height: auto;">
+                            {% image self.image max-700x500 as img %}
+                            <img src="{{ img.url }}" alt="{{ img.alt }}" style="height: auto;">
                         </picture>
                     {% if self.link.url %}
                       </a>
