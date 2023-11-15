@@ -12,7 +12,7 @@ RUN useradd wagtail
 # 2. Set PORT variable that is used by Gunicorn. This should match "EXPOSE"
 #    command.
 ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED=1 
+ENV PYTHONUNBUFFERED=1
 #\
 #    PORT=8000
 
@@ -33,6 +33,26 @@ RUN pip install "gunicorn==21.0.1"
 # Install the project requirements.
 COPY requirements.txt /
 RUN pip install -r /requirements.txt
+
+COPY ./entrypoint /entrypoint
+RUN sed -i 's/\r$//g' /entrypoint
+RUN chmod +x /entrypoint
+
+#COPY ./e/local/django/start /start
+#RUN sed -i 's/\r$//g' /start
+#RUN chmod +x /start
+
+COPY ./start-celeryworker /start-celeryworker
+RUN sed -i 's/\r$//g' /start-celeryworker
+RUN chmod +x /start-celeryworker
+
+COPY ./start-celerybeat /start-celerybeat
+RUN sed -i 's/\r$//g' /start-celerybeat
+RUN chmod +x /start-celerybeat
+
+COPY ./start-flower /start-flower
+RUN sed -i 's/\r$//g' /start-flower
+RUN chmod +x /start-flower
 
 # Use /app folder as a directory where the source code is stored.
 WORKDIR /app
@@ -61,3 +81,5 @@ RUN python manage.py collectstatic --noinput --clear
 #   phase facilities of your hosting platform. This is used only so the
 #   Wagtail instance can be started with a simple "docker run" command.
 #CMD set -xe; python manage.py migrate --noinput; gunicorn website.wsgi:application
+
+ENTRYPOINT ["/entrypoint"]
