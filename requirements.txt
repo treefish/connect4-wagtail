@@ -16,3 +16,5 @@ django-crispy-forms==2.0
 environs[django]==9.5.0
 redis
 celery
+flower
+

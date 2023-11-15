@@ -19,6 +19,7 @@ services:
       - ./static:/usr/share/nginx/html/static
       - ./media:/usr/share/nginx/html/media
 
+
   wagtail:
     build:
       context: .
@@ -32,7 +33,7 @@ services:
       - 8000
     ports:
       - 8587:587
-    #command : wait-for-it.sh db:5432 -- python manage.py runserver 0.0.0.0:8000
+        #command : wait-for-it.sh db:5432 -- python manage.py runserver 0.0.0.0:8000
     command : wait-for-it.sh db:5432 -- gunicorn website.wsgi:application -w 2 --bind 0.0.0.0:8000 --timeout 120
     env_file:
       - ./.env
@@ -57,14 +58,16 @@ services:
     volumes:
       - redisdata:/data
 
-  celery:
+  celery_worker:
     restart: unless-stopped
-    container_name: connect4-celery
+    container_name: connect4-celery-worker
     build:
       context: .
+      dockerfile: Dockerfile
     ports:
       - 8588:587
-    command: celery -A website worker -l INFO
+    command: /start-celeryworker
+      #command: celery -A website worker -l INFO
     volumes:
       - .:/app
     env_file:
@@ -74,6 +77,41 @@ services:
       - redis
       - wagtail
 
+  celery_beat:
+    build:
+      context: .
+      dockerfile: Dockerfile
+        #      dockerfile: ./compose/local/django/Dockerfile
+    image: connect4-celery-beat
+    container_name: connect4-celery-beat
+    ports:
+      - 8589:587
+    command: /start-celerybeat
+    volumes:
+      - .:/app
+    env_file:
+      - ./.env
+    depends_on:
+      - redis
+      - db
+
+  flower:
+    build:
+      context: .
+      dockerfile: Dockerfile
+        #      dockerfile: ./compose/local/django/Dockerfile
+    image: connect4-flower
+    container_name: connect4-flower
+    command: /start-flower
+    volumes:
+      - .:/app
+    env_file:
+      - ./.env
+    ports:
+      - 5557:5555
+    depends_on:
+      - redis
+      - db        
 
 volumes:
   postgres_data:
