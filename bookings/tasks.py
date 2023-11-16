@@ -11,7 +11,7 @@ def adding_task(x, y):
 
 @shared_task()
 def send_booking_email_task(id):
-    print("* Sending e-mail message using Celery!")
+    print("* Sending e-mail message using send_booking_email_task()")
     booking = Booking.objects.get(id=id)
     event = booking.event
     user = booking.family
