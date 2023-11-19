@@ -29,7 +29,6 @@ class BookingForm(forms.ModelForm):
             self.fields['event'].queryset = EventPage.objects.filter(id__in=available_events)
 
         if user:
-            # Possible place to restrict attendees for selection based on Event restrictions (e.g. age for Youth Events).
             self.fields['attendees'].queryset = FamilyMember.objects.filter(family=user)
 
     def clean(self):
@@ -39,10 +38,6 @@ class BookingForm(forms.ModelForm):
 
 
 class BookingUpdateForm(forms.ModelForm):
-    # family_members = forms.ModelMultipleChoiceField(
-    #     queryset = None,
-    #     widget = forms.CheckboxSelectMultiple
-    # )
 
     attendees = forms.ModelMultipleChoiceField(
         queryset = None,

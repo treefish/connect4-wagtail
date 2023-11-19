@@ -8,7 +8,7 @@
     <p>Booked Family Members:</p>
     <ul>
     {% for attendee in booking.attendance_set.all %}
-        <li>{{ attendee.family_member }}</li>
+        <li>{{ attendee.family_member }} ({{ attendee.family_member.get_type_display }})</li>
     {% endfor %}
     </ul>
 
