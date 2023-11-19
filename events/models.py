@@ -200,6 +200,16 @@ class EventPage(Page):
         return self.start_date > timezone.now()
 
     @property
+    def spaces_available(self):
+        bookings = self.booking_set.all()
+        num_booked_attendees = 0
+        for booking in bookings:
+            num_booked_attendees += booking.attendance_set.all().count()
+
+        spaces_available = self.capacity - num_booked_attendees
+        return spaces_available
+
+    @property
     def event_bookable(self):
         ## Cannot use a property in a queryset! Still, may be a useful function here.
         # For drop-down lists that allow selecting an event to book:
@@ -207,16 +217,7 @@ class EventPage(Page):
         # - bookable field is True
         # - In the future (if in the pass, then bookable should be set to False automatically?)
         # - Capacity not reached in bookings (family members)
-
-        # num_bookings = Booking.objects.filter(event=self).count()
-        spaces_available = True
-
-        return self.event_in_future and spaces_available
-
-    # event_list = EventPage.objects.all()
-    # event = event_list.first()
-    # event = EventPage.objects.first()
-    # event.event_bookable
+        return self.event_in_future and self.spaces_available > 0
 
 
     def clean(self):

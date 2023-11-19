@@ -50,12 +50,22 @@ def available_events(user):
     '''
     family_bookings = Booking.objects.filter(family=user)
     ids = [booking.event.id for booking in family_bookings]
-    available_events = EventPage.objects.live().filter(start_date__gt=timezone.now()).filter(bookable=True).exclude(id__in=ids)
+    # available_events = EventPage.objects.live().filter(start_date__gt=timezone.now()).filter(bookable=True).exclude(id__in=ids)
+    available_events = EventPage.objects.live().filter(start_date__gt=timezone.now()).exclude(id__in=ids)
     ids = [
         event.id
         for event in available_events
     ]
-    return available_events
+
+    # Slow way to restrict events to those with capacity
+    available_event_ids = []
+    for event in EventPage.objects.filter(id__in=ids):
+        if event.spaces_available > 0:
+            available_event_ids.append(event.id)
+        else:
+            print("No spaces left!")
+
+    return available_event_ids  # ids #available_events
 
 
 @login_required
