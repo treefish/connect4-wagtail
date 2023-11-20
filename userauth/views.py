@@ -4,7 +4,6 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.contrib.auth import get_user_model
-#from .models import CustomUser
 from .forms import CustomUserUpdateForm
 from registration.models import FamilyMember
 
@@ -21,6 +20,7 @@ If a user deleted their profile after an event (that they and family members att
 class CustomUserUpdateView(UpdateView):
     model = User
     form_class = CustomUserUpdateForm
+    success_url = reverse_lazy('account_profile')
 
     def get_object(self, queryset=None):
         return User.objects.get(id=self.request.user.id)

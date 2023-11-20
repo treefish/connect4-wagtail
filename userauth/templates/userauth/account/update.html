@@ -6,7 +6,7 @@
 
 {% block card-header %}
     <h3>{% trans "Account Update" %}</h3>
-    <h4>{{ user.username }}</h4>
+    <h4>{{ user.email }}</h4>
 {% endblock %}
 
 {% block card-body %}
@@ -55,7 +55,9 @@
         </div>
     </div>
 
-    <button type="submit" class="btn btn-outline-primary">{% trans "Update" %}</button>
+    <button type="submit" class="btn btn-success">{% trans "Update" %}</button>
+    <a type="button" class="btn btn-danger" href="{% url 'account_profile' %}">Cancel</a>
+
 </form>
 
 {% endblock %}

@@ -5,8 +5,8 @@
 {% block title %}{% trans "Profile" %}{% endblock %}
 
 {% block card-header %}
-    <h3>{% trans "Account profile" %}</h3>
-    <h4>{{ user.username }}</h4>
+    <h3>{% trans "Account Profile" %}</h3>
+    <h4>{{ user.email }}</h4>
 {% endblock %}
 
 {% block card-body %}
@@ -27,7 +27,7 @@
                 {{ user.email }}
             </div>
             <div class="col border">
-                <small>{% trans "Family name" %}:</small><br>
+                <small>{% trans "Family descriptive name" %}:</small><br>
                 {{ user.family_name }}
             </div>
         </div>
@@ -92,84 +92,9 @@
                     {% endfor %}
             </tbody>
         </table>
-
-{% comment %}
-       <div class="row">
-            <div class="col border">
-                Parent / Child
-            </div>
-            <div class="col border">
-                First Name
-            </div>
-            <div class="col border">
-                Last Name
-            </div>
-            <div class="col border">
-                Dietary
-            </div>
-            <div class="col border">
-                Medical
-            </div>
-            <div class="col border">
-                Date of Birth
-            </div>
-            <div class="col border">
-                Gender
-            </div>
-            <div class="col border">
-                School
-            </div>
-            <div class="col border">
-                FSM
-            </div>
-            <div class="col border">
-                SEN
-            </div>
-       </div>
-       {% for fm in familymembers %}
-       <div class="row">
-            <div class="col border">
-                <small>{{ fm.type }}</small>
-            </div>
-            <div class="col border">
-                <small>{{ fm.first_name }}</small>
-            </div>
-            <div class="col border">
-                <small>{{ fm.last_name }}</small>
-            </div>
-            <div class="col border">
-                <small>{{ fm.dietary_req }}</small>
-            </div>
-            <div class="col border">
-                <small>{{ fm.medical_req }}</small>
-            </div>
-            <div class="col border">
-                <small>{{ fm.childmore.dob|date:'j/m/Y' }}</small>
-            </div>
-            <div class="col border">
-                <small>{{ fm.childmore.gender }}</small>
-            </div>
-            <div class="col border">
-                <small>{{ fm.childmore.school }}</small>
-            </div>
-            <div class="col border">
-                <small>{{ fm.childmore.fsm }}</small>
-            </div>
-            <div class="col border">
-                <small>{{ fm.childmore.lsen }}</small>
-            </div>
-       </div>
-       {% endfor %}
-    </div>
-
-{% endcomment %}
-
 {% endblock %}
 
 {% block card-footer %}
-    <a href="{% url 'account_update'  %}">{% trans "Update your account" %}</a>
-    <a href="{% url 'family-members' %}">{% trans "Update Family Members" %}</a>
-    {% comment %}
-    <a href="{% url 'account_update' request.user.pk %}">{% trans "Update your account" %}</a>
-    {% endcomment %}
+    <a type="button" class="btn btn-info" href="{% url 'account_update'  %}">{% trans "Update Profile" %}</a>
+    <a type="button" class="btn btn-info" href="{% url 'family-members' %}">{% trans "Update Family Members" %}</a>
 {% endblock %}

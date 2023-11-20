@@ -13,14 +13,11 @@
     </ul>
 
     <div class="mt-2">
-            <button hx-get="{% url 'update-booking-attendees' booking.id %}"
-            class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-            Attendees
-            </button>
-            <button hx-post="{% url 'delete-booking' booking.id %}"
-            class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-            Cancel Booking
-            </button>
+        <button type="button" class="btn btn-info" hx-get="{% url 'update-booking-attendees' booking.id %}">Edit Attendees</button>
+        <button type="button" class="btn btn-danger" hx-post="{% url 'delete-booking' booking.id %}">Remove Booking</button>
+        {% comment %}
+            <button type="button" class="btn btn-primary" hx-post="{% url 'delete-booking' booking.id %}" onclick="confirm()">
+        {% endcomment %}
     </div>
 </div>
 
