@@ -21,7 +21,7 @@ def send_booking_email_task(id):
 
     recipients = [user.email]
     bcc = ["connect4@treefish.co.nz"]
-    subject = "Connect4Families Event Booking - {event.title}"
+    subject = f"Connect4Families Event Booking - {event.title}"
     body = f'''
 Hello {user.first_name},
 

@@ -12,6 +12,9 @@
         <button type="button" class="btn btn-primary" hx-get="{% url 'create-family-member-form' %}" hx-target="#familymemberforms" hx-swap="beforeend">Add Parent Family Member</button>
         <button type="button" class="btn btn-primary" hx-get="{% url 'create-family-member-child-form' %}" hx-target="#familymemberforms" hx-swap="beforeend">Add Child Family Member</button>
     </div>
+    <div class="flex-1 min-w-0">
+        <p>Please ensure you have added yourself as a Family Member if you intend to attend any events.</p>
+    </div>
 {% endblock %}
 
 {% block card-body %}

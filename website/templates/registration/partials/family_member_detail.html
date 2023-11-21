@@ -4,7 +4,7 @@
     </h3>
     <p class="text-gray-600">First Name: {{ family_member.first_name }}</p>
     <p class="text-gray-600">Last Name: {{ family_member.last_name }}</p>
-    <p class="text-gray-600">Parent/Child: {{ family_member.type }}</p>
+    <p class="text-gray-600">Parent or Child: {{ family_member.get_type_display }}</p>
     {% if family_member.type == 'CHILD' %}
     <p class="text-gray-600">Date of Birth: {{ family_member.childmore.dob|date:'j F Y' }}</p>
     <p class="text-gray-600">Gender: {{ family_member.childmore.gender }}</p>
