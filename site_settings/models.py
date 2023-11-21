@@ -32,7 +32,7 @@ class ContactSettings(BaseGenericSetting):
     contact = RichTextField(
         blank=True,
         null=True,
-        features=["link"]
+        features=["bold", "italic", "ol", "ul", "link", "document-link"]
     )
 
     panels = [
