@@ -1,2 +1,0 @@
-export COMPOSE_FILE=docker-compose.dev.yml
-docker compose exec wagtail python manage.py collectstatic --noinput --clear

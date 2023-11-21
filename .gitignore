@@ -174,4 +174,3 @@ docker-compose.dev.yml
 
 # Wagtail
 media
-static
