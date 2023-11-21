@@ -83,7 +83,7 @@ class HomePage(Page):
             target_model="testimonials.Testimonial",
             template="streams/testimonial_block.html"
         )),
-        ("pricing_table", blocks.PricingTableBlock(table_options=NEW_TABLE_OPTIONS)),
+        #("pricing_table", blocks.PricingTableBlock(table_options=NEW_TABLE_OPTIONS)),
     ], null=True, blank=True, use_json_field=True)
 
     content_panels = Page.content_panels + [

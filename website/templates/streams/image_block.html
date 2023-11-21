@@ -1,10 +1,11 @@
 {% load wagtailimages_tags %}
 
-{% image self fill-640x480 as img %}
-<div class="row my-4">
-    <div class="col-sm-12">
-        <picture>
-            <img src="{{ img.url }}" alt="{{ img.alt }}" style="width: 25; height: auto;">
-        </picture>
-    </div>
+<!--Image Block-->
+{% image self max-320x240 as img %}
+<div class="row text-center cc-title-block">
+  <div class="col">
+    <picture>
+        <img src="{{ img.url }}" alt="{{ img.alt }}" style="width: 25; height: auto;">
+    </picture>
+  </div>
 </div>
