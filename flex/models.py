@@ -18,6 +18,10 @@ class FlexPage(Page):
         ("title", blocks.TitleBlock()),
         ("cards", blocks.CardsBlock()),
         ("image_and_text", blocks.ImageAndTextBlock()),
+        ("image", ImageChooserBlock(
+            help_text="Ths image will be cropped to 640px by 480px.",
+            template="streams/image_block.html"
+        )),
         ("cta", blocks.CallToActionBlock()),
         ("testimonial", SnippetChooserBlock(
             target_model="testimonials.Testimonial",
