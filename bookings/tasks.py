@@ -72,8 +72,8 @@ Hello {user.first_name},
 Thank you for your cancellation of this booking, this action enables other families to book this event. The full details of the booking you are cancelling are shown below:
 
   Event: {event.title}
-  Date.: {event.start_date.strftime("%d/%m/%Y")}
-  Time.: {event.start_date.strftime("%H:%M %p")} - {event.end_date.strftime("%H:%M %p")}
+  Date.: {localdate(event.start_date).strftime("%d/%m/%Y")}
+  Time.: {localdate(vent.start_date).strftime("%H:%M %p")} - {localdate(event.end_date).strftime("%H:%M %p")}
 
 The following people in your group were booked to come to this event:
 
