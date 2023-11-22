@@ -6,7 +6,6 @@ from .forms import FamilyMemberForm, FamilyMemberChildForm
 
 User = get_user_model()
 
-
 def create_family_member(request):
     user = User.objects.get(id=request.user.id)
     family_members = FamilyMember.objects.filter(family=user)
@@ -20,16 +19,12 @@ def create_family_member(request):
             if family_member.type == FamilyMember.Types.PARENT:
                 print("* Processing PARENT form")
                 family_member.save()
-
                 return redirect("detail-family-member", pk=family_member.id)
             elif family_member.type == FamilyMember.Types.CHILD:
-                print("* Processing CHILD form")
                 if child_form.is_valid():
-                    print(f"* childmore form: {child_form}")
                     family_member.type = FamilyMember.Types.CHILD
                     family_member.save()
                     childmore = child_form.save(commit=False)
-                    print(f"* childmore FSM: {childmore.fsm}")
                     childmore.family_member = family_member
 
                     childmore.save()
@@ -45,8 +40,6 @@ def create_family_member(request):
                 "form": form,
                 "child_form": child_form,
             })
-    # else:
-    #     child_form.fields['fsm'].initial = None
 
     context = {
         "form": form,
@@ -92,21 +85,15 @@ def update_family_member(request, pk):
         childmore = family_member.childmore
         child_form = FamilyMemberChildForm(request.POST or None, instance=childmore)
     else:
-        print("* FamilyMember is PARENT")
         child_form = FamilyMemberForm(None)
 
     if request.method == "POST":
-        print("* Request is POST")
         if form.is_valid():
-            print("* Form is VALID")
             family_member = form.save(commit=False)
             if family_member.type == FamilyMember.Types.PARENT:
-                print("* Processing PARENT form")
                 family_member.save()
-
                 return redirect("detail-family-member", pk=family_member.id)
             elif family_member.type == FamilyMember.Types.CHILD:
-                print("* Processing CHILD form")
                 if child_form.is_valid():
                     family_member.type = FamilyMember.Types.CHILD
                     family_member.save()
@@ -122,14 +109,11 @@ def update_family_member(request, pk):
                         "family_member": family_member
                     })
         else:
-            print("* Form is INVALID!")
             return render(request, "registration/partials/family_member_form.html", context={
                 "form": form,
                 "child_form": child_form,
                 "family_member": family_member
             })
-    else:
-        print("* Request is GET")
 
     context = {
         "form": form,

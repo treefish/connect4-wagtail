@@ -1,32 +1,78 @@
+{% load i18n %}
+
 <div hx-target="this" hx-swap="outerHTML" class="mt-1 py-3 px-3 bg-white shadow border border-gray-100">
     <h3 class="text-lg leading-6 font-medium text-gray-900">
         Family Member: {{ family_member.full_name }}
     </h3>
-    <p class="text-gray-600">First Name: {{ family_member.first_name }}</p>
-    <p class="text-gray-600">Last Name: {{ family_member.last_name }}</p>
-    <p class="text-gray-600">Parent or Child: {{ family_member.get_type_display }}</p>
-    {% if family_member.type == 'CHILD' %}
-    <p class="text-gray-600">Date of Birth: {{ family_member.childmore.dob|date:'j F Y' }}</p>
-    <p class="text-gray-600">Gender: {{ family_member.childmore.gender }}</p>
-    <p class="text-gray-600">Free School Meals (FSM)?: {{ family_member.childmore.fsm|yesno:"Yes,No" }}</p>
-    {% endif %}
-    <p class="text-gray-600">Dietary: {{ family_member.diet_req|yesno:"Yes,No" }}
-    {% if family_member.diet_req %}
-    - {{ family_member.diet_detail }}
-    {% endif %}
-    </p>
-    <p class="text-gray-600">Medical: {{ family_member.medical_req|yesno:"Yes,No" }}
-    {% if family_member.medical_req %}
-    - {{ family_member.medical_detail }}
-    {% endif %}
-    </p>
-    {% if family_member.type == 'CHILD' %}
-      <p class="text-gray-600">SEN: {% if family_member.childmore.sen_req == '1' %}Yes - {{ family_member.childmore.sen_detail }}
-      {% else %}
-      No
-      {% endif %}
-      </p>
-    {% endif %}
+    <div class="container">
+        <div class="row">
+            <div class="col border">
+                <small>{% trans "First name" %}:</small><br>
+                {{ family_member.first_name|default:'' }}
+            </div>
+            <div class="col border">
+                <small>{% trans "Last name" %}:</small><br>
+                {{ family_member.last_name|default:'' }}
+            </div>
+            <div class="col border">
+                <small>Parent or Child:</small><br>
+                {{ family_member.get_type_display }}
+            </div>
+        </div>
+
+        {% if family_member.type == 'CHILD' %}
+
+        <div class="row">
+            <div class="col border">
+                <small>{% trans "Date of Birth" %}:</small><br>
+                {{ family_member.childmore.dob|date:'j F Y' }}
+            </div>
+            <div class="col border">
+                <small>{% trans "Gender" %}:</small><br>
+                {{ family_member.childmore.get_gender_display }}
+            </div>
+            <div class="col border">
+                <small>{% trans "Free School Meals (FSM)?" %}:</small><br>
+                {{ family_member.childmore.fsm|yesno:"Yes,No" }}
+            </div>
+        </div>
+
+        {% endif %}
+
+        <div class="row">
+            <div class="col border">
+                <small>{% trans "Dietary" %}:</small><br>
+                {{ family_member.diet_req|yesno:"Yes,No" }}
+                {% if family_member.diet_req %}
+                  - {{ family_member.diet_detail }}
+                {% endif %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col border">
+                <small>{% trans "Medical" %}:</small><br>
+                {{ family_member.medical_req|yesno:"Yes,No" }}
+                {% if family_member.medical_req %}
+                  - {{ family_member.medical_detail }}
+                {% endif %}
+            </div>
+        </div>
+
+        {% if family_member.type == 'CHILD' %}
+
+        <div class="row">
+            <div class="col border">
+                <small>{% trans "SEN/EHCP" %}:</small><br>
+                {{ family_member.childmore.sen_req|yesno:"Yes,No" }}
+                {% if family_member.childmore.sen_req == True %}
+                - {{ family_member.childmore.sen_detail }}
+                {% endif %}
+            </div>
+        </div>
+
+        {% endif %}
+
+    </div>
     <div class="mt-2">
         <button type="button" class="btn btn-info" hx-get="{% url 'update-family-member' family_member.id %}">Update</button>
         {% comment %}

@@ -1,5 +1,5 @@
 {% extends 'account/base_card.html' %}
-
+{% load crispy_forms_tags %}
 {% load i18n %}
 
 {% block title %}{% trans "Account Update" %}{% endblock %}
@@ -10,50 +10,9 @@
 {% endblock %}
 
 {% block card-body %}
-
-
 <form method="post" action="{% url 'account_update' %}" class="needs-validation" novalidate>
-
     {% csrf_token %}
-    <div class="form-group">
-        {% with field=form.email %}{% include "account/form_field.html" %}{% endwith %}
-    </div>
-    <div class="form-group">
-        {% with field=form.family_name %}{% include "account/form_field.html" %}{% endwith %}
-    </div>
-
-    <div class="form-row">
-        <div class="form-group col-md-6">
-            {% with field=form.first_name %}{% include "account/form_field.html" %}{% endwith %}
-        </div>
-        <div class="form-group col-md-6">
-            {% with field=form.last_name %}{% include "account/form_field.html" %}{% endwith %}
-        </div>
-    </div>
-
-    <div class="form-row">
-        <div class="form-group col-md-6">
-            {% with field=form.post_code %}{% include "account/form_field.html" %}{% endwith %}
-        </div>
-        <div class="form-group col-md-6">
-            {% with field=form.city %}{% include "account/form_field.html" %}{% endwith %}
-        </div>
-    </div>
-
-    <div class="form-row">
-        <div class="form-group col-md-6">
-            Photo Consent
-        </div>
-        <div class="form-group col-md-6">
-            {% with field=form.contact_number %}{% include "account/form_field.html" %}{% endwith %}
-        </div>
-    </div>
-
-    <div class="form-row">
-        <div class="form-group col-md-6">
-            {% with field=form.additional_information %}{% include "account/form_field.html" %}{% endwith %}
-        </div>
-    </div>
+    {{ form|crispy }}
 
     <button type="submit" class="btn btn-success">{% trans "Update" %}</button>
     <a type="button" class="btn btn-danger" href="{% url 'account_profile' %}">Cancel</a>

@@ -8,7 +8,6 @@ from .models import FamilyMember, ChildMore
 
 User = get_user_model()
 
-
 # FamilyMember (Parent and Child)
 class FamilyMemberForm(forms.ModelForm):
     class Meta:

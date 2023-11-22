@@ -118,10 +118,10 @@ class ChildMore(models.Model):
     school = models.CharField("School", max_length=100, null=True, blank=True)
 #    fsm_char = models.CharField("Eligible for benefit related Free School Meals (FSM)?", choices = YesNo.choices, default=base_yesno )
     fsm = models.BooleanField("Eligible for benefit related Free School Meals (FSM)?", null=True)
-    sen_req = models.BooleanField("Special educational needs (SEN) or Education health care plan (EHCP)?", null=True)
+    sen_req = models.BooleanField("Special educational needs (SEN) or Education Health Care Plan (EHCP)?", null=True)
     sen_req_old = models.CharField("Special educational needs (SEN) or Education health care plan (EHCP)?", choices=YesNo.choices,
                            default=base_yesno)
-    sen_detail = models.TextField("SEN Details", max_length=1024, null=True, blank=True)
+    sen_detail = models.TextField("SEN/EHCP Details", max_length=1024, null=True, blank=True)
 
     @property
     def years_old(self):
