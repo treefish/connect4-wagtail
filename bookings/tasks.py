@@ -73,7 +73,7 @@ Thank you for your cancellation of this booking, this action enables other famil
 
   Event: {event.title}
   Date.: {localdate(event.start_date).strftime("%d/%m/%Y")}
-  Time.: {localdate(vent.start_date).strftime("%H:%M %p")} - {localdate(event.end_date).strftime("%H:%M %p")}
+  Time.: {localdate(event.start_date).strftime("%H:%M %p")} - {localdate(event.end_date).strftime("%H:%M %p")}
 
 The following people in your group were booked to come to this event:
 
