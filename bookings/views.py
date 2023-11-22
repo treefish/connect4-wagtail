@@ -188,7 +188,8 @@ def delete_booking(request, pk):
 
     if request.method == "POST":
         send_booking_cancellation_email_task.delay(booking.id)
-        booking.delete()
+        ## cannot delete booking here because the cancellation e-mail is too slow. Will have to delete the booking in the e-mail task.
+        # booking.delete()
         return HttpResponse("")
 
     return HttpResponseNotAllowed(

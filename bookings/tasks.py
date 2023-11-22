@@ -87,3 +87,6 @@ Connect4Families Team
     #    reply_to=["another@example.com"],
     #    headers={"Message-ID": "foo"},
     email.send()
+
+    # Delete the booking here because we have to wait for the e-mail to be sent.
+    booking.delete()
