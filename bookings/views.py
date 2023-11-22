@@ -187,8 +187,8 @@ def delete_booking(request, pk):
     booking = get_object_or_404(Booking, id=pk)
 
     if request.method == "POST":
-        booking.delete()
         send_booking_cancellation_email_task.delay(booking.id)
+        booking.delete()
         return HttpResponse("")
 
     return HttpResponseNotAllowed(
