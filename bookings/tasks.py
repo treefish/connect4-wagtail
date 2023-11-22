@@ -1,3 +1,5 @@
+from django.utils.timezone import localdate, localtime
+
 from celery import shared_task
 from django.core.mail import EmailMessage
 from bookings.models import Booking
@@ -28,8 +30,8 @@ Hello {user.first_name},
 Thank you for your booking, please save the date in your calendar. The full details of your booking are shown below:
 
   Event: {event.title}
-  Date.: {event.start_date.strftime("%d/%m/%Y")}
-  Time.: {event.start_date.strftime("%H:%M %p")} - {event.end_date.strftime("%H:%M %p")}
+  Date.: {localdate(event.start_date).strftime("%d/%m/%Y")}
+  Time.: {localtime(event.start_date).strftime("%H:%M %p")} - {localtime(event.end_date).strftime("%H:%M %p")}
 
 The following people in your group are booked to come to this event:
 

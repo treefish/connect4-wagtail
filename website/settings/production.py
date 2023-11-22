@@ -6,7 +6,7 @@ env = Env()
 env.read_env()
 
 DEBUG = False
-ALLOWED_HOSTS = ["connect4.pcs.hants.sch.uk", "pc-s-docker.park.internal", "dockery.treefish.co.nz", "connect4-wagtail.treefish.co.nz", "localhost", "0.0.0.0", "127.0.0.1"]
+ALLOWED_HOSTS = ["connect4.org.uk", "www.connect4.org.uk", "connect4.pcs.hants.sch.uk", "pc-s-docker.park.internal", "dockery.treefish.co.nz", "connect4-wagtail.treefish.co.nz", "localhost", "0.0.0.0", "127.0.0.1"]
 SECRET_KEY = env("DJANGO_SECRET_KEY")
 
 # No! Using nginx - STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
