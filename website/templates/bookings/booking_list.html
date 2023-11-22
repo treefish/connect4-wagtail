@@ -7,21 +7,21 @@
 {% block card-header %}
     <div class="flex-1 min-w-0">
         <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
-            {% trans "Bookings" %}
+            {% trans "Bookings" %} - {{ user.family_name }}
         </h2>
-        <h3>{{ user.family_name }}</h3>
-        <h4>{{ user.first_name }} {{ user.last_name }} ({{ user.email }})</h4>
+        <h3>{{ user.first_name }} {{ user.last_name }} ({{ user.email }})</h3>
     </div>
     <div class="mt-4 flex md:mt-0 md:ml-4">
         <button type="button" class="btn btn-primary" hx-get="{% url 'create-booking-form' %}" hx-target="#bookingforms" hx-swap="beforeend">
-            Add Booking
+            Book an Event
         </button>
     </div>
 {% endblock %}
 
 {% block card-body %}
-<div id="bookingforms" class="py-2 mt-2"></div>
+<div id="bookingforms">
 
+</div>
 <div class="mt-2 py-2 border-t border-gray-100">
     {% for booking in booking_list %}
       {% include "bookings/partials/booking_detail.html" %}

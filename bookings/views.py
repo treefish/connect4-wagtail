@@ -10,7 +10,7 @@ from django.urls import reverse, reverse_lazy
 # from django.core.mail import EmailMessage
 from django.contrib.auth.decorators import login_required
 
-from .tasks import send_booking_email_task, adding_task
+from .tasks import send_booking_email_task, send_booking_cancellation_email_task  # adding_task
 from django.contrib.auth import get_user_model
 from .models import Booking, Attendance
 from .forms import BookingForm, BookingUpdateForm
@@ -188,6 +188,7 @@ def delete_booking(request, pk):
 
     if request.method == "POST":
         booking.delete()
+        send_booking_cancellation_email_task.delay(booking.id)
         return HttpResponse("")
 
     return HttpResponseNotAllowed(
