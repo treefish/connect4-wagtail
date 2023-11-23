@@ -25,6 +25,8 @@
                    <tr><td>Week</td><td>{{ eventpage.week }}</td></tr>
                    <tr><td>Capacity</td><td>{{ eventpage.capacity }}</td></tr>
                    <tr><td>Spaces Available</td><td>{{ eventpage.spaces_available }}</td></tr>
+                   <tr><td># Parent Attendees</td><td>{{ eventpage.num_parent_attendees }}</td></tr>
+                   <tr><td># Child Attendees</td><td>{{ eventpage.num_child_attendees }}</td></tr>
                    <tr><td>Bookable</td><td>{{ event.bookable|yesno:"Yes,No" }}</td></tr>
                 </tbody>
             </table>
@@ -32,7 +34,7 @@
         </div>
         <div class="bd-example-snippet bd-code-snippet">
           <a class="btn btn-info" href="/admin/pages/{{ eventpage.id }}/edit/" role="button">Edit Event</a>
-          <a class="btn btn-info" href="#" role="button">View Bookings</a>
+          <a class="btn btn-info" href="{% url 'event_bookings_list' eventpage.id %}" role="button">View Bookings</a>
         </div>
         <h2>Attendance Register Daily</h2>
         <div class="bd-example-snippet bd-code-snippet">

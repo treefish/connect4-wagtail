@@ -77,9 +77,6 @@ class ContactPage(AbstractEmailForm):
             ]),
             FieldPanel("subject"),
         ], heading="Email Settings"),
-        # FieldPanel("to_address"),
-        # FieldPanel("from_address"),
-        # FieldPanel("subject"),
     ]
 
 

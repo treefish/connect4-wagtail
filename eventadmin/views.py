@@ -33,7 +33,7 @@ class EventBaseView(View):
 
 class EventListView(LoginRequiredMixin, UserPassesTestMixin, EventBaseView, ListView):
     """View to list all events.
-     Use the 'event_list' variable in the template
+     Use the 'eventpage_list' variable in the template
      to access all Event objects"""
 
     template_name = 'eventadmin/event_list.html'
@@ -48,6 +48,17 @@ class EventDetailView(LoginRequiredMixin, UserPassesTestMixin, EventBaseView, De
     the specific event here and in the Views below"""
 
     template_name = 'eventadmin/event_detail.html'
+
+    def test_func(self):
+        return is_member(self.request.user)
+
+
+class EventBookingsListView(LoginRequiredMixin, UserPassesTestMixin, EventBaseView, DetailView):
+    """View to list the details from one event.
+    Use the 'event' variable in the template to access
+    the specific event here and in the Views below"""
+
+    template_name = 'eventadmin/event_bookings_list.html'
 
     def test_func(self):
         return is_member(self.request.user)
