@@ -117,7 +117,7 @@ class ChildMore(models.Model):
     gender = models.CharField('Gender', max_length=10, choices=Gender.choices, default=base_gender)
     school = models.CharField("School", max_length=100, null=True, blank=True)
 #    fsm_char = models.CharField("Eligible for benefit related Free School Meals (FSM)?", choices = YesNo.choices, default=base_yesno )
-    fsm = models.BooleanField("Eligible for benefit related Free School Meals (FSM)?", null=True)
+    fsm = models.BooleanField("In receipt of Free School Meals (FSM)?", null=True)
     sen_req = models.BooleanField("Special educational needs (SEN) or Education Health Care Plan (EHCP)?", null=True)
     sen_req_old = models.CharField("Special educational needs (SEN) or Education health care plan (EHCP)?", choices=YesNo.choices,
                            default=base_yesno)

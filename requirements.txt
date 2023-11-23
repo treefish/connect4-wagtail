@@ -17,4 +17,4 @@ environs[django]==9.5.0
 redis
 celery
 flower
-
+django-wagtail-recaptcha
