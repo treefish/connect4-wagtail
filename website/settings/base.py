@@ -79,6 +79,8 @@ INSTALLED_APPS = [
     "allauth.socialaccount",
     "crispy_forms",
     "crispy_bootstrap5",
+#    "django_recaptcha",
+#    "wagtailcaptcha",
 ]
 
 MIDDLEWARE = [

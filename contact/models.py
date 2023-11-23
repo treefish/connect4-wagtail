@@ -3,8 +3,15 @@ from django.utils.translation import gettext_lazy as _
 
 from wagtail.contrib.forms.models import AbstractEmailForm, AbstractFormField
 from modelcluster.fields import ParentalKey
-from wagtail.admin.panels import FieldPanel, InlinePanel
+from wagtail.admin.panels import (
+    FieldPanel,
+    FieldRowPanel,
+    InlinePanel,
+    MultiFieldPanel
+)
 from wagtail.fields import RichTextField
+
+#from wagtailcaptcha.models import WagtailCaptchaEmailForm
 
 FORM_FIELD_CHOICES = (
     ('singleline', _('Single line text')),
@@ -54,7 +61,7 @@ class ContactPage(AbstractEmailForm):
     )
     map_url = models.URLField(
         blank=True,
-        help_text="Optional. If you provie a link here the mapimage will become a link.",
+        help_text="Optional. If you provide a link here the map image will become a link.",
     )
 
     content_panels = AbstractEmailForm.content_panels + [
@@ -63,9 +70,16 @@ class ContactPage(AbstractEmailForm):
         FieldPanel("map_url"),
         InlinePanel("form_fields", label="Form Fields"),
         FieldPanel("thank_you_text"),
-        FieldPanel("to_address"),
-        FieldPanel("from_address"),
-        FieldPanel("subject"),
+        MultiFieldPanel([
+            FieldRowPanel([
+                FieldPanel('from_address', classname="col6"),
+                FieldPanel('to_address', classname="col6"),
+            ]),
+            FieldPanel("subject"),
+        ], heading="Email Settings"),
+        # FieldPanel("to_address"),
+        # FieldPanel("from_address"),
+        # FieldPanel("subject"),
     ]
 
 

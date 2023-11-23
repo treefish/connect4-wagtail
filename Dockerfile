@@ -33,6 +33,7 @@ RUN pip install "gunicorn==21.0.1"
 # Install the project requirements.
 COPY requirements.txt /
 RUN pip install -r /requirements.txt
+ADD forms.py /usr/local/lib/python3.11/site-packages/wagtailcaptcha/
 
 COPY ./entrypoint /entrypoint
 RUN sed -i 's/\r$//g' /entrypoint
