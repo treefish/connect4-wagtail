@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "partners",
     "registration",
     "bookings",
+    "eventadmin",
 
     # Wagtail
     "wagtail.contrib.forms",

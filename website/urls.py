@@ -19,6 +19,9 @@ urlpatterns = [
 
     path('registration/', include('registration.urls')),
     path('bookings/', include('bookings.urls')),
+
+    path('eventadmin/', include('eventadmin.urls')),
+
 ]
 
 

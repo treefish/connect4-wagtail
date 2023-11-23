@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5" style="width: 90%;">
+    <div class="col">
+        <h1 class="text-center">Event Details (Admin)</h1>
+        <div class="d-flex justify-content-center">
+
+            <table class="table table-striped mt-5" style="width: 100%">
+                <thead>
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                   <tr><td>Name</td><td>{{ eventpage.title }}</td></tr>
+                   <tr><td>Description</td><td>{{ eventpage.description }}</td></tr>
+                   <tr><td>Type</td><td>{{ eventpage.event_type }}</td></tr>
+
+                   <tr><td>Start Date/Time</td><td>{{ eventpage.start_date|date:'j F Y h:i a' }}</td></tr>
+                   <tr><td>End Date/Time</td><td>{{ eventpage.end_date|date:'j F Y h:i a' }}</td></tr>
+                   <tr><td>Project</td><td><a href="{{ eventpage.get_parent.id }}">{{eventpage.get_parent}}</a></td></tr>
+                   <tr><td>Week</td><td>{{ eventpage.week }}</td></tr>
+                   <tr><td>Capacity</td><td>{{ eventpage.capacity }}</td></tr>
+                   <tr><td>Spaces Available</td><td>{{ eventpage.spaces_available }}</td></tr>
+                   <tr><td>Bookable</td><td>{{ event.bookable|yesno:"Yes,No" }}</td></tr>
+                </tbody>
+            </table>
+
+        </div>
+        <div class="bd-example-snippet bd-code-snippet">
+          <a class="btn btn-info" href="/admin/pages/{{ eventpage.id }}/edit/" role="button">Edit Event</a>
+          <a class="btn btn-info" href="#" role="button">View Bookings</a>
+        </div>
+        <h2>Attendance Register Daily</h2>
+        <div class="bd-example-snippet bd-code-snippet">
+          <a class="btn btn-info" href="#" role="button">Summary</a>
+          <a class="btn btn-info" href="#" role="button">Download</a>
+          <a class="btn btn-info" href="#" role="button">Upload</a>
+        </div>
+        <div class="bd-example-snippet bd-code-snippet">
+          <a href="{% url 'events' %}" class="d-block btn btn-primary btn-lg my-5">Events</a>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock  %}

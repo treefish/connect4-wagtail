@@ -211,6 +211,16 @@ class EventPage(Page):
         return spaces_available
 
     @property
+    def booked_parents(self):
+        bookings = self.booking_set.all()
+        num_booked_attendees = 0
+        for booking in bookings:
+            num_booked_attendees += booking.attendance_set.all().count()
+
+        spaces_available = self.capacity - num_booked_attendees
+        return spaces_available
+
+    @property
     def event_bookable(self):
         ## Cannot use a property in a queryset! Still, may be a useful function here.
         # For drop-down lists that allow selecting an event to book:
@@ -219,6 +229,26 @@ class EventPage(Page):
         # - In the future (if in the pass, then bookable should be set to False automatically?)
         # - Capacity not reached in bookings (family members)
         return self.event_in_future and self.spaces_available > 0
+
+    def number_of_attendees(self, type="PARENT"):
+        bookings = self.booking_set.all()
+        num_in_event = 0
+        for booking in bookings:
+            for attendee in booking.attendance_set.all():
+                if attendee.family_member.type == type:
+                    num_in_event += 1
+
+        print(f"Event: {self.title}\tNumber of attendees of type {type}: {num_in_event}")
+        return num_in_event
+
+    @property
+    def num_parent_attendees(self):
+        return self.number_of_attendees(type="PARENT")
+
+    @property
+    def num_child_attendees(self):
+        return self.number_of_attendees(type="CHILD")
+
 
 
     def clean(self):
