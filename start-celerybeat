@@ -4,4 +4,7 @@ set -o errexit
 set -o nounset
 
 rm -f './celerybeat.pid'
-celery -A website beat -l INFO
+#celery -A website beat -l INFO
+
+# With django-celery-beat
+celery -A website beat -l INFO -S django
