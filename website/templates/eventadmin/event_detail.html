@@ -5,6 +5,7 @@
 <div class="container mt-5" style="width: 90%;">
     <div class="col">
         <h1 class="text-center">Event Details (Admin)</h1>
+        <h2 class="text-center">{{ eventpage.title }}</h2>
         <div class="d-flex justify-content-center">
 
             <table class="table table-striped mt-5" style="width: 100%">
@@ -15,7 +16,6 @@
                     </tr>
                 </thead>
                 <tbody>
-                   <tr><td>Name</td><td>{{ eventpage.title }}</td></tr>
                    <tr><td>Description</td><td>{{ eventpage.description }}</td></tr>
                    <tr><td>Type</td><td>{{ eventpage.event_type }}</td></tr>
 
