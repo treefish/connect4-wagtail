@@ -17,7 +17,7 @@
                     <th class="text-center" scope="col">Booking Date</th>
                     <th class="text-center" scope="col"># Attendees</th>
                     <th class="text-center" scope="col">Attendees</th>
-
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -36,6 +36,7 @@
                         {% endfor %}
                         </ul>
                     </td>
+                    <td><a class="btn btn-info" href="/django-admin/bookings/booking/{{ booking.id }}/change/" role="button">Edit</a></td>
                 </tr>
                 {% endfor %}
             </tbody>
