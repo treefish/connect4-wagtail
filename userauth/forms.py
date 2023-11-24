@@ -45,14 +45,3 @@ class CustomUserUpdateForm(ModelForm):
     class Meta:
         model = CustomUser
         fields = ['email', 'first_name', 'last_name', 'family_name', 'photo_consent', 'post_code', 'city', 'contact_number', 'additional_information',]
-
-
-# class CustomUserUpdateForm(ModelForm):
-#     class Meta:
-#         model = CustomUser
-#         fields = ['email', 'first_name', 'last_name', 'family_name', 'photo_consent', 'post_code', 'city', 'contact_number', 'additional_information',]
-
-
-# TODO: Get a widget for True/False for Photo Consent
-#         CHOICES = [(True, "Yes"), (False, "No")]
-#         widgets = {'photo_consent': forms.ChoiceField(widget=forms.RadioSelect, choices=CHOICES)}
