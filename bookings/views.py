@@ -92,7 +92,7 @@ def create_booking(request):
                 print(f"* <create_booking>: Booked to come: {family_member}")
                 attendance, created = Attendance.objects.get_or_create(booking=booking, family_member=family_member)
                 if created:
-                    print(f"* <create_booking>: Creating booked atendance for {family_member}")
+                    print(f"* <create_booking>: Creating booked attendance for {family_member}")
                 else:
                     print(f"* <create_booking>: Updating booked attendance for {family_member}")
 

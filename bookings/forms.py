@@ -33,6 +33,7 @@ class BookingForm(forms.ModelForm):
 
     def clean(self):
         print(f"* <<BookingForm clean>>")
+        # TODO: Check if event is of type Youth Events, then only children (ages?) can be added as attendee.
         super().clean()
         print(f"* <BookingForm>: Form Data: {self.data}")
 
@@ -67,7 +68,11 @@ class BookingUpdateForm(forms.ModelForm):
 
             # This should be the Attendance objects, to pre-set the booked or not.
             self.fields['attendees'].queryset = FamilyMember.objects.filter(family=user)
-
-
         else:
             print(f"* <BookingUpdateForm>: Updating booked family members for booking: No booking!")
+
+    def clean(self):
+        print(f"* <<BookingUpdateForm clean>>")
+        # TODO: Check if event is of type Youth Events, then only children (ages?) can be added as attendee.
+        super().clean()
+        #print(f"* <BookingUpdateForm>: Form Data: {self.data}")
