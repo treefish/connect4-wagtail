@@ -81,10 +81,6 @@ def create_booking(request):
             booking = form.save(commit=False)
             booking.family = user
             booking.save()
-            #ans = adding_task.delay(3, 7) -- just testing Celery
-            # Cannot send an object to a task - https://stackoverflow.com/questions/49373825/kombu-exceptions-encodeerror-user-is-not-json-serializable
-            send_booking_email_task.delay(booking.id)
-
             # Handle list of ticked booked family members.
             booked_attendees = request.POST.getlist('attendees')
             for id in booked_attendees:
@@ -96,6 +92,9 @@ def create_booking(request):
                 else:
                     print(f"* <create_booking>: Updating booked attendance for {family_member}")
 
+            #ans = adding_task.delay(3, 7) -- just testing Celery
+            # Cannot send an object to a task - https://stackoverflow.com/questions/49373825/kombu-exceptions-encodeerror-user-is-not-json-serializable
+            send_booking_email_task.delay(booking.id)
             return redirect("detail-booking", pk=booking.id)
         else:
             return render(request, "bookings/partials/booking_form.html", context={
@@ -151,7 +150,6 @@ def update_booking_attendees(request, pk):
             #booking = form.save(commit=False)
             booking.booking_date = timezone.now()
             booking.save()
-            send_booking_email_task.delay(booking.id)
             # Remove current bookings
             booked_attendees.delete()
             # handle list of ticked booked family members.
@@ -164,7 +162,7 @@ def update_booking_attendees(request, pk):
                     print(f"* <update_booking_attendees>: Creating booked attendance for {family_member}")
                 else:
                     print(f"* <update_booking_attendees>: Updating booked attendance for {family_member}")
-
+            send_booking_email_task.delay(booking.id)
             return redirect("detail-booking", pk=booking.id)
         else:
             return render(request, "bookings/partials/booking_form.html", context={
@@ -189,6 +187,7 @@ def delete_booking(request, pk):
     if request.method == "POST":
         send_booking_cancellation_email_task.delay(booking.id)
         ## cannot delete booking here because the cancellation e-mail is too slow. Will have to delete the booking in the e-mail task.
+        # Could wait here for the task to complete, but no harm deleting the booking in the task.
         # booking.delete()
         return HttpResponse("")
 
