@@ -208,6 +208,8 @@ class EventPage(Page):
             num_booked_attendees += booking.attendance_set.all().count()
 
         spaces_available = self.capacity - num_booked_attendees
+        if spaces_available < 0:
+            spaces_available = 0
         return spaces_available
 
     @property
