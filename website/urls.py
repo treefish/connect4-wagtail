@@ -21,7 +21,6 @@ urlpatterns = [
     path('bookings/', include('bookings.urls')),
 
     path('eventadmin/', include('eventadmin.urls')),
-
 ]
 
 

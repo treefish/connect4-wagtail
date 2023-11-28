@@ -80,8 +80,7 @@ INSTALLED_APPS = [
     "crispy_forms",
     "crispy_bootstrap5",
     "django_celery_beat",
-#    "django_recaptcha",
-#    "wagtailcaptcha",
+    "turnstile",
 ]
 
 MIDDLEWARE = [

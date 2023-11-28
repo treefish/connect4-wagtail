@@ -76,11 +76,9 @@ EMAIL_HOST_USER = env("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
 EMAIL_PORT = env("EMAIL_PORT")
 
-# Recaptcha Settings
-SILENCED_SYSTEM_CHECKS = ['django_recaptcha.recaptcha_test_key_error']
-RECAPTCHA_PUBLIC_KEY = env("RECAPTCHA_SITE_KEY")
-RECAPTCHA_PRIVATE_KEY = env("RECAPTCHA_SECRET_KEY")
-NORECAPTCHA = True
+# https://www.cloudflare.com/en-au/products/turnstile/
+TURNSTILE_SITEKEY = env("TURNSTILE_SITEKEY")
+TURNSTILE_SECRET = env("TURNSTILE_SECRET")
 
 try:
     from .local import *

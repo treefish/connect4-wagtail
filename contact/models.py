@@ -11,7 +11,8 @@ from wagtail.admin.panels import (
 )
 from wagtail.fields import RichTextField
 
-#from wagtailcaptcha.models import WagtailCaptchaEmailForm
+# CloudFlare Captcha alternative
+from turnstile.fields import TurnstileField
 
 FORM_FIELD_CHOICES = (
     ('singleline', _('Single line text')),
@@ -78,5 +79,14 @@ class ContactPage(AbstractEmailForm):
             FieldPanel("subject"),
         ], heading="Email Settings"),
     ]
+
+    # https://stackoverflow.com/questions/48321770/how-to-modify-attributes-of-the-wagtail-form-input-fields
+    # Shows how to override fields in form.
+    def get_form(self, *args, **kwargs):
+        form = super().get_form(*args, **kwargs)
+        #turnstile = TurnstileField(theme='dark', size='compact')
+        turnstile = TurnstileField(label='Human check', help_text="Humans only please")
+        form.fields['turnstile'] = turnstile
+        return form
 
 
