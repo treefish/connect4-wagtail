@@ -6,8 +6,9 @@ from wagtail.models import Page
 from wagtail.fields import StreamField
 from wagtail import blocks as wagtail_blocks
 from wagtail.admin.panels import FieldPanel, FieldRowPanel
-
 from streams import blocks
+
+from registration.models import FamilyMember
 
 ########################################################################################################################
 #
@@ -251,6 +252,41 @@ class EventPage(Page):
     def num_child_attendees(self):
         return self.number_of_attendees(type="CHILD")
 
+    @property
+    def num_fsm_attendees(self):
+        bookings = self.booking_set.all()
+        num_in_event = 0
+        for booking in bookings:
+            for attendee in booking.attendance_set.all():
+                if attendee.family_member.type == "CHILD" and attendee.family_member.childmore.fsm is True:
+                    num_in_event += 1
+
+        print(f"Event: {self.title}\tNumber of FSM attendees: {num_in_event}")
+        return num_in_event
+
+    @property
+    def num_fsm_attendees(self):
+        # This is a way that works but uses five queries, whereas single liner uses one query.
+        # But needs to import registration.models FamilyMember.
+
+        # bookings = self.booking_set.all()
+        # num_in_event = 0
+        # for booking in bookings:
+        #     for attendee in booking.attendance_set.all():
+        #         if attendee.family_member.type == "CHILD" and attendee.family_member.childmore.fsm is True:
+        #             num_in_event += 1
+
+        num_in_event = FamilyMember.objects.select_related("childmore").filter(attendance__booking__event=self).filter(type="CHILD").filter(childmore__fsm=True).count()
+        print(f"Event: {self.title}\tNumber of FSM attendees: {num_in_event}")
+        return num_in_event
+
+    @property
+    def num_sen_attendees(self):
+        # See num_fsm_attendees (commented section) for slower method
+        num_in_event = FamilyMember.objects.select_related("childmore").filter(attendance__booking__event=self).filter(type="CHILD").filter(childmore__sen_req=True).count()
+
+        print(f"Event: {self.title}\tNumber of SEN attendees: {num_in_event}")
+        return num_in_event
 
 
     def clean(self):

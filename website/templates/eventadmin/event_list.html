@@ -19,6 +19,8 @@
                     <th class="text-center" scope="col">Spaces Available</th>
                     <th class="text-center" scope="col"># Parent Attendees</th>
                     <th class="text-center" scope="col"># Child Attendees</th>
+                    <th class="text-center" scope="col"># FSM</th>
+                    <th class="text-center" scope="col"># SEN</th>
                     <th class="text-center" scope="col">Live?</th>
                     <th class="text-center" scope="col">Bookable?</th>
                 </tr>
@@ -36,6 +38,8 @@
                     <td class="text-center">{{event.spaces_available}}</td>
                     <td class="text-center">{{event.num_parent_attendees}}</td>
                     <td class="text-center">{{event.num_child_attendees}}</td>
+                    <td class="text-center">{{event.num_fsm_attendees}}</td>
+                    <td class="text-center">{{event.num_sen_attendees}}</td>
                     <td class="text-center">{{event.live|yesno:"Yes,No"}}</td>
                     <td class="text-center">{{event.bookable|yesno:"Yes,No"}}</td>
                 </tr>

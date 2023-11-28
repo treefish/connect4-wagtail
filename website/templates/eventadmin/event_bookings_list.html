@@ -16,7 +16,7 @@
                     <th class="text-left" scope="col">Family</th>
                     <th class="text-center" scope="col">Booking Date</th>
                     <th class="text-center" scope="col"># Attendees</th>
-                    <th class="text-left" scope="col">Attendees</th>
+                    <th class="text-left" scope="col">Attendees (Name, P/C, DoB, Years old, Gender, FSM, SEN)</th>
                     <th></th>
                 </tr>
             </thead>
@@ -30,11 +30,27 @@
                     <td class="text-center">{{booking.booking_date|date:'j/m/Y'}}</td>
                     <td class="text-center">{{ booking.attendance_set.all.count }}</td>
                     <td class="text-left">
-                        <ul>
+                        <table class="table table-sm">
                         {% for attendee in booking.attendance_set.all %}
-                          <li>{{ attendee.family_member.first_name }} {{ attendee.family_member.last_name }} ({{ attendee.family_member.get_type_display }})</li>
+                          <tr>
+                              <td style="width:30%">{{ attendee.family_member.first_name }} {{ attendee.family_member.last_name }}</td>
+                              <td style="width:20%">{{ attendee.family_member.get_type_display }}</td>
+                              {% if attendee.family_member.type == 'CHILD' %}
+                              <td>{{ attendee.family_member.childmore.dob|date:'j/m/Y' }}</td>
+                              <td class="text-center">{{ attendee.family_member.childmore.years_old }}</td>
+                              <td>{{ attendee.family_member.childmore.get_gender_display }}</td>
+                              <td>{{ attendee.family_member.childmore.fsm|yesno:"Yes,No" }}</td>
+                              <td>{{ attendee.family_member.childmore.sen_req|yesno:"Yes,No" }}</td>
+                              {% else %}
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              {% endif %}
+                          </tr>
                         {% endfor %}
-                        </ul>
+                        </table>
                     </td>
                     <td><a class="btn btn-info" href="/django-admin/bookings/booking/{{ booking.id }}/change/" role="button">Edit</a></td>
                 </tr>

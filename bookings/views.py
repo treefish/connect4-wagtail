@@ -81,10 +81,15 @@ def create_booking(request):
             booking = form.save(commit=False)
             booking.family = user
             booking.save()
+            event_type = booking.event.event_type
+
             # Handle list of ticked booked family members.
             booked_attendees = request.POST.getlist('attendees')
             for id in booked_attendees:
                 family_member = FamilyMember.objects.get(id=id)
+                # TODO: Check if family member is eligible to attend (e.g. Child 11-16 only in Youth Events).
+#                if event_type.name == "Youth Events" and family_member.type == "CHILD":
+
                 print(f"* <create_booking>: Booked to come: {family_member}")
                 attendance, created = Attendance.objects.get_or_create(booking=booking, family_member=family_member)
                 if created:
