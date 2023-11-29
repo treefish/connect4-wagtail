@@ -19,6 +19,7 @@
       <table class="table table-striped mt-5 sortable">
             <thead>
                 <tr>
+                    <th>#</th>
                     <th class="text-left" scope="col">Family</th>
                     <th class="text-left" scope="col">E-Mail</th>
                     <th class="text-left" scope="col">First Name</th>
@@ -31,6 +32,7 @@
             <tbody>
            {% for family in family_list %}
                <tr>
+                   <th scope="row">{{forloop.counter}}</th>
                    <td><a href="{% url 'family_detail' family.id %}">{{ family.family_name }}</a></td>
                    <td>{{ family.email }}</td>
                    <td>{{ family.first_name }}</td>

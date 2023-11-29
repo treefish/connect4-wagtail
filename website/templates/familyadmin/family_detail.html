@@ -63,6 +63,7 @@
                     <table class="table table-striped mt-2 sortable">
                         <thead>
                             <tr>
+                                <th>#</th>
                                 <th scope="col">Parent/Child</th>
                                 <th scope="col">Name</th>
                                 <th scope="col">DoB</th>
@@ -78,6 +79,7 @@
                         <tbody>
                                 {% for family_member in family.family_member.all %}
                                 <tr{% if family_member.type == "CHILD" %} class="table-primary"{% else %} class="table-warning"{% endif %}>
+                                    <th scope="row">{{forloop.counter}}</th>
                                     <td> {{ family_member.get_type_display }}</td>
                                     <td> {{ family_member }}</td>
                                     <td> {{ family_member.childmore.dob|date:'j/m/Y' }}</td>
