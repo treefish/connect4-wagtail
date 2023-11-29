@@ -53,7 +53,7 @@ class FamilyListView(LoginRequiredMixin, UserPassesTestMixin, FamilyBaseView, Li
         q = self.request.GET.get("q")
         if q:
             return User.objects.filter(
-                Q(family_name__icontains=q) | Q(email__icontains=q)
+                Q(family_name__icontains=q) | Q(email__icontains=q) | Q(first_name__icontains=q) | Q(last_name__icontains=q)
             )
 
 

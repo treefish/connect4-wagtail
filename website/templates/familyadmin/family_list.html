@@ -25,10 +25,11 @@
             <thead>
                 <tr>
                     <th class="text-left" scope="col">Family</th>
-                    <th class="text-left" scope="col">User</th>
-                    <th class="text-left" scope="col"></th>
-                    <th class="text-left" scope="col"></th>
-                    <th class="text-left" scope="col"></th>
+                    <th class="text-left" scope="col">E-Mail</th>
+                    <th class="text-left" scope="col">First Name</th>
+                    <th class="text-left" scope="col">Last Name</th>
+                    <th class="text-left" scope="col">Photo Consent</th>
+                    <th class="text-left" scope="col">Contact Number</th>
                     <th></th>
                 </tr>
             </thead>
@@ -37,9 +38,10 @@
                <tr>
                    <td><a href="{% url 'family_detail' family.id %}">{{ family.family_name }}</a></td>
                    <td>{{ family.email }}</td>
-                   <td></td>
-                   <td></td>
-                   <td></td>
+                   <td>{{ family.first_name }}</td>
+                   <td>{{ family.last_name }}</td>
+                   <td>{{ family.photo_consent|yesno:'Yes,No' }}</td>
+                   <td>{{ family.contact_number }}</td>
                    <td></td>
                </tr>
            {% endfor %}
