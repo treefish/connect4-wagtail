@@ -59,6 +59,7 @@
                 <br>
                 <div class="container">
                    <H5>Family members</H5>
+                    {% if family.family_member.all %}
                     <table class="table table-striped mt-2" style="width: 100% sortable">
                         <thead>
                             <tr>
@@ -92,10 +93,14 @@
                                 {% endfor %}
                         </tbody>
                     </table>
+                    {% else %}
+                    <B>No family members!</B>
+                    {% endif %}
                 </div>
 
                 <div class="container">
                    <H5>Bookings</H5>
+                   {% if family.booking_set.all %}
                     <table class="table table-striped mt-2" style="width: 100% sortable">
                         <thead>
                             <tr>
@@ -128,6 +133,9 @@
                             {% endfor %}
                         </tbody>
                     </table>
+                    {% else %}
+                    <B>No bookings!</B>
+                    {% endif %}
                 </div>
 
                 <div class="card-footer text-muted text-center">
