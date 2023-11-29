@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Family List{% endblock title %}
+
+{% block content %}
+<H1>Families</H1>
+
+       <div class="d-flex justify-content-left">
+         <form class="d-flex" action="{% url 'family_list' %}" method="get">
+           <input class="form-control me-2" type="search" name="q" placeholder="Search" aria-label="Search" >
+           <button class="btn btn-outline-success" type="submit">Search</button>
+         </form>
+       </div>
+<BR>
+{% if qname %}
+<p>Searching for <b><em>{{ qname }}</em></b></p>
+{% endif %}
+{% comment %}
+       <div class="d-flex justify-content-right">
+            <a href="{% url 'bookcanon:person_create' %}" class="btn btn-primary">Add Person</a>
+
+       </div>
+{% endcomment %}
+      <table class="table table-striped mt-5 sortable">
+            <thead>
+                <tr>
+                    <th class="text-left" scope="col">Family</th>
+                    <th class="text-left" scope="col">User</th>
+                    <th class="text-left" scope="col"></th>
+                    <th class="text-left" scope="col"></th>
+                    <th class="text-left" scope="col"></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+           {% for family in family_list %}
+               <tr>
+                   <td><a href="{% url 'family_detail' family.id %}">{{ family.family_name }}</a></td>
+                   <td>{{ family.email }}</td>
+                   <td></td>
+                   <td></td>
+                   <td></td>
+                   <td></td>
+               </tr>
+           {% endfor %}
+            </tbody>
+        </table>
+
+{% endblock content %}

@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+{% load i18n static %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10 col-sm-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3>{% trans "Family Details (Admin)" %}</h3>
+                    <h4>{{ family.family_name }}</h4>
+                </div>
+                <div class="card-body">
+                   <H5>User (Organiser)</H5>
+                   <div class="container">
+                   <div class="row">
+                        <div class="col border">
+                            <small>{% trans "First name" %}:</small><br>
+                            {{ family.first_name|default:'' }}
+                        </div>
+                        <div class="col border">
+                            <small>{% trans "Last name" %}:</small><br>
+                            {{ family.last_name|default:'' }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col border">
+                            <small>{% trans "E-mail" %}:</small><br>
+                            {{ family.email }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col border">
+                            <small>{% trans "Post Code" %}:</small><br>
+                            {{ family.post_code }}
+                        </div>
+                        <div class="col border">
+                            <small>{% trans "City" %}:</small><br>
+                            {{ family.city }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col border">
+                            <small>{% trans "Photo consent?" %}:</small><br>
+                            {{ family.photo_consent|yesno:'Yes,No' }}
+                        </div>
+                        <div class="col border">
+                            <small>{% trans "Contact mobile phone" %}:</small><br>
+                            {{ family.contact_number }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col border">
+                            <small>{% trans "Additional Information" %}:</small><br>
+                            {{ family.additional_information }}
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="container">
+                   <H5>Family members</H5>
+                    <table class="table table-striped mt-2" style="width: 100% sortable">
+                        <thead>
+                            <tr>
+                                <th scope="col">Parent/Child</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">DoB</th>
+                                <th scope="col">Years Old</th>
+                                <th scope="col">Gender</th>
+                                <th scope="col">Dietary</th>
+                                <th scope="col">Medical</th>
+                                <th scope="col">FSM</th>
+                                <th scope="col">SEN</th>
+                                <th scope="col">School</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                                {% for family_member in family.family_member.all %}
+                                <tr{% if family_member.type == "CHILD" %} class="table-primary"{% else %} class="table-warning"{% endif %}>
+                                    <td> {{ family_member.get_type_display }}</td>
+                                    <td> {{ family_member }}</td>
+                                    <td> {{ family_member.childmore.dob|date:'j/m/Y' }}</td>
+                                    <td class="text-center">{{ family_member.childmore.years_old }}</td>
+                                    <td> {{ family_member.childmore.gender }}</td>
+                                    <td> {{ family_member.dietary_req|yesno:"Yes," }}</td>
+                                    <td> {{ family_member.medical_req|yesno:"Yes," }}</td>
+                                    <td> {{ family_member.childmore.fsm|yesno:"Yes," }}</td>
+                                    <td> {{ family_member.childmore.sen|yesno:"Yes," }}</td>
+                                    <td> {{ family_member.childmore.school|default:'' }}</td>
+
+                                </tr>
+                                {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="container">
+                   <H5>Bookings</H5>
+                    <table class="table table-striped mt-2" style="width: 100% sortable">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th class="text-center" scope="col">Event</th>
+                                <th class="text-center" scope="col">Type</th>
+                                <th class="text-center" scope="col">Booking Date</th>
+                                <th class="text-center" scope="col"># Attendees</th>
+                                <th class="text-left" scope="col">Attendees</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for booking in family.booking_set.all %}
+                            <tr>
+                                <th scope="row">{{forloop.counter}}</th>
+                                <td class="text-left">{{ booking.event }}</td>
+                                <td class="text-left">{{ booking.event.event_type }}</td>
+                                <td class="text-center">{{booking.booking_date|date:'j/m/Y'}}</td>
+                                <td class="text-center">{{ booking.attendance_set.all.count }}</td>
+                                <td class="text-left">
+                                    <ul class="list-group">
+                                        {% for attendee in booking.attendance_set.all %}
+                                        <li class="list-group-item {% if attendee.family_member.type == "CHILD" %} list-group-item-primary{% else %} list-group-item-warning{% endif %}">{{ attendee.family_member.first_name }} {{ attendee.family_member.last_name }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </td>
+                                <td><a class="btn btn-info" href="/django-admin/bookings/booking/{{ booking.id }}/change/" role="button">Edit</a></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card-footer text-muted text-center">
+                    <a type="button" class="btn btn-info" href="{% url 'family_list' %}">Families</a>
+
+                </div>
+           </div>
+        </div>
+    </div>
+</div>
+    </div>
+
+</div>
+
+{% endblock  %}
