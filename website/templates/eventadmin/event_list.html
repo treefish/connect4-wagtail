@@ -27,7 +27,7 @@
             </thead>
             <tbody>
                 {% for event in eventpage_list %}
-                <tr {% if event.event_type.id == 1 %} class="table-primary" {% else %} class="table-success" {% endif %}>
+                <tr {% if event.event_type.id == 1 %} class="table-warning" {% else %} class="table-primary" {% endif %}>
                     <th scope="row">{{forloop.counter}}</th>
                     <td class="ml-5"><a href="{% url 'event_detail' event.id %}">{{event.title}}</a></td>
                     <td class="text-center">{{event.start_date|date:'j/m/Y'}}</td>
