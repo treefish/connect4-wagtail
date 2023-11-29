@@ -119,7 +119,7 @@
                             {% for booking in family.booking_set.all %}
                             <tr>
                                 <th scope="row">{{forloop.counter}}</th>
-                                <td class="text-left">{{ booking.event }}</td>
+                                <td class="text-left"><a href="{% url 'event_detail' booking.event.id %}">{{booking.event.title}}</a></td>
                                 <td class="text-left">{{ booking.event.event_type }}</td>
                                 <td class="text-center">{{booking.booking_date|date:'j/m/Y'}}</td>
                                 <td class="text-center">{{ booking.attendance_set.all.count }}</td>

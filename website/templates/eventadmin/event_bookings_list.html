@@ -11,9 +11,9 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th class="text-left" scope="col">User</th>
-                    <th class="text-left" scope="col">Organiser</th>
                     <th class="text-left" scope="col">Family</th>
+                    <th class="text-left" scope="col">E-mail</th>
+                    <th class="text-left" scope="col">Organiser</th>
                     <th class="text-center" scope="col">Booking Date</th>
                     <th class="text-center" scope="col"># Attendees</th>
                     <th class="text-left" scope="col">Attendees (Name, P/C, DoB, Years old, Gender, FSM, SEN)</th>
@@ -24,9 +24,9 @@
                 {% for booking in eventpage.booking_set.all %}
                 <tr>
                     <th scope="row">{{forloop.counter}}</th>
+                    <td class="ml-5"><a href="{% url 'family_detail' booking.family.id %}">{{ booking.family.family_name }}</a></td>
                     <td class="ml-5">{{booking.family.email}}</td>
                     <td class="ml-5">{{booking.family.first_name}} {{booking.family.last_name}}</td>
-                    <td class="text-left">{{booking.family.family_name}}</td>
                     <td class="text-center">{{booking.booking_date|date:'j/m/Y'}}</td>
                     <td class="text-center">{{ booking.attendance_set.all.count }}</td>
                     <td class="text-left">
