@@ -31,7 +31,7 @@
         {% comment %}
         {% for card in events %}
         {% endcomment %}
-    {% for card in page.get_children %}
+    {% for card in page.get_children.live %}
     {% with card=card.specific %}
     <div class="col-md-6 d-flex align-items-stretch">
       <div class="card mb-3 text-center">
