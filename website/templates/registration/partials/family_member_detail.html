@@ -25,7 +25,7 @@
         <div class="row">
             <div class="col border">
                 <small>{% trans "Date of Birth" %}:</small><br>
-                {{ family_member.childmore.dob|date:'j F Y' }}
+                {{ family_member.childmore.dob|date:'j F Y' }} ({{ family_member.childmore.years_old }} yr)
             </div>
             <div class="col border">
                 <small>{% trans "Gender" %}:</small><br>

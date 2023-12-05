@@ -11,7 +11,7 @@
       <p>Booked Family Members:</p>
       <ul>
       {% for attendee in booking.attendance_set.all %}
-        <li>{{ attendee.family_member }} ({{ attendee.family_member.get_type_display }})</li>
+        <li>{{ attendee.family_member }} ({{ attendee.family_member.get_type_display }}{% if attendee.family_member.type == 'CHILD' %} - {{ attendee.family_member.childmore.years_old }}{% endif %})</li>
       {% endfor %}
       </ul>
     {% endif %}

@@ -22,15 +22,14 @@ class Booking(models.Model):
         ordering = ["-booking_date"]
         unique_together = ('family', 'event',)
 
+
     def __str__(self):
         return f"{self.family} - {self.event} - {self.booking_date}"
 
 
 class Attendance(models.Model):
     booking = models.ForeignKey(Booking, on_delete=models.CASCADE)
-    # Note Attendee must be a FamilyMember of the Family that Booked.
     family_member = models.ForeignKey(FamilyMember, on_delete=models.CASCADE)
-    # booked = models.BooleanField("Booked for event?", default=False)
     attended = models.BooleanField("Attended event?", default=False)
 
     class Meta:
@@ -38,3 +37,5 @@ class Attendance(models.Model):
 
     def __str__(self):
         return f"{self.family_member} - {self.attended}"
+
+# TODO: Attendee must be a FamilyMember of the Family that Booked.
