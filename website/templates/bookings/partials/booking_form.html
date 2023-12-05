@@ -6,6 +6,10 @@
         Event: {{ booking.event }}
       </h3>
       <p class="text-gray-600">Event Date: {{ booking.event.start_date|date:'j/m/Y' }}</p>
+      <p class="text-gray-600">Spaces Available: {{ booking.event.spaces_available }}</p>
+      {% if booking.event.spaces_available <= 0 %}
+      <p><B>No more spaces are available. You can alter your booking to change attendees but you cannot add more family members to the booking.</B></p>
+      {% endif %}
       <p class="text-gray-600">Booking Date: {{ booking.booking_date|date:'j/m/Y h:i a' }}</p>
 
       <p>Booked Family Members:</p>

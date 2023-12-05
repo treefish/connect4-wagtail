@@ -34,6 +34,9 @@ class BookingForm(forms.ModelForm):
 
     def clean(self):
         '''
+        All Events
+        - Cannot exceed available spaces
+
         Family Fun Days
         - At least one Parent must attend, can be more.
         - At least one Child must attend.
@@ -41,9 +44,11 @@ class BookingForm(forms.ModelForm):
         Youth Events
         - Only Children 11-16 (Secondary) can attend
         '''
+
         print(f"* <<BookingForm clean>>")
         cleaned_data = super().clean()
         event = cleaned_data.get("event")
+        spaces_available = event.spaces_available
         attendees = cleaned_data.get("attendees")
         print(f"* <BookingForm>: Form Data: {self.data}")
         print(f"* <BookingForm>: Event: {event}")
@@ -71,6 +76,8 @@ class BookingForm(forms.ModelForm):
         elif event.event_type.name == "Family Fun Days":
             if (num_parents == 0) or (num_children == 0):
                 errors["attendees"] = "Must have at least one Parent/Caregiver and at least one Child in Family Fun Days Events."
+        if attendees.count() > spaces_available:
+            errors["attendees"] = f"Too many attendees ({attendees.count()}) added for the number of spaces available for this event ({spaces_available})."
 
         if errors:
             raise ValidationError(errors)
@@ -98,6 +105,7 @@ class BookingUpdateForm(forms.ModelForm):
             print(f"* <BookingUpdateForm>: Updating booked family members for booking: {instance}")
             self.fields["booking_date"].widget.attrs['readonly'] = True
             self.event = instance.event
+            self.booking = instance
             print(f"* - Event: {instance.event}")
             booked_attendees = Attendance.objects.filter(booking=instance)
             print(f"* - Booked Attendees: {booked_attendees}")
@@ -110,6 +118,9 @@ class BookingUpdateForm(forms.ModelForm):
     def clean(self):
         print(f"* <<BookingUpdateForm clean>>")
         '''
+        All Events
+        - Cannot exceed available spaces
+        
         Family Fun Days
         - At least one Parent must attend, can be more.
         - At least one Child must attend.
@@ -121,10 +132,13 @@ class BookingUpdateForm(forms.ModelForm):
         cleaned_data = super().clean()
 
         event = self.event # From __init__() above
+        spaces_available = event.spaces_available
+        currently_booked_spaces = self.booking.attendance_set.all().count()
         attendees = cleaned_data.get("attendees")
         print(f"* <BookingUpdateForm>: Form Data: {self.data}")
+        print(f"* <BookingUpdateForm>: Booking: {self.booking}")
         print(f"* <BookingUpdateForm>: Event: {event}")
-        print(f"* <BookingUpdateForm>: Attendees: {attendees}")
+        print(f"* <BookingUpdateForm>: Attendees: ({currently_booked_spaces}) - {attendees}")
 
         num_parents = 0
         num_children = 0
@@ -148,6 +162,8 @@ class BookingUpdateForm(forms.ModelForm):
         elif event.event_type.name == "Family Fun Days":
             if (num_parents == 0) or (num_children == 0):
                 errors["attendees"] = "Must have at least one Parent/Caregiver and at least one Child in Family Fun Days Events."
+        if attendees.count() > spaces_available + currently_booked_spaces:
+            errors["attendees"] = f"Too many attendees ({attendees.count()}) added for the number of spaces available for this event ({spaces_available})."
 
         if errors:
             raise ValidationError(errors)
