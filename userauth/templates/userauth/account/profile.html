@@ -5,107 +5,105 @@
 {% block title %}{% trans "Profile" %}{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-lg-8 col-md-10 col-sm-12">
-            <div class="card">
-                <div class="card-header">
-                    <h3>{% trans "Account Profile" %}</h3>
-                    <h4>{{ user.email }}</h4>
-                </div>
-                <div class="card-body">
 
-                   <div class="container">
-                   <div class="row">
-                        <div class="col border">
-                            <small>{% trans "First name" %}:</small><br>
-                            {{ user.first_name|default:'' }}
-                        </div>
-                        <div class="col border">
-                            <small>{% trans "Last name" %}:</small><br>
-                            {{ user.last_name|default:'' }}
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col border">
-                            <small>{% trans "E-mail" %}:</small><br>
-                            {{ user.email }}
-                        </div>
-                        <div class="col border">
-                            <small>{% trans "Family descriptive name" %}:</small><br>
-                            {{ user.family_name }}
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col border">
-                            <small>{% trans "Post Code" %}:</small><br>
-                            {{ user.post_code }}
-                        </div>
-                        <div class="col border">
-                            <small>{% trans "City" %}:</small><br>
-                            {{ user.city }}
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col border">
-                            <small>{% trans "Photo consent?" %}:</small><br>
-                            {{ user.photo_consent|yesno:'Yes,No' }}
-                        </div>
-                        <div class="col border">
-                            <small>{% trans "Contact mobile phone" %}:</small><br>
-                            {{ user.contact_number }}
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col border">
-                            <small>{% trans "Additional Information" %}:</small><br>
-                            {{ user.additional_information }}
-                        </div>
-                    </div>
-                </div>
-
-                <div class="container">
-                   <H2>Family members</H2>
-                    <table class="table table-striped mt-5" style="width: 100% sortable">
-                        <thead>
-                            <tr>
-                                <th scope="col">Parent/Child</th>
-                                <th scope="col">Name</th>
-                                <th scope="col">DoB</th>
-                                <th scope="col">Gender</th>
-                                <th scope="col">Dietary</th>
-                                <th scope="col">Medical</th>
-                                <th scope="col">FSM</th>
-                                <th scope="col">SEN</th>
-                                <th scope="col">School</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                                {% for family_member in family_members %}
-                                <tr>
-                                    <td> {{ family_member.get_type_display }}</td>
-                                    <td> {{ family_member }}</td>
-                                    <td> {{ family_member.childmore.dob|date:'j/m/Y' }}</td>
-                                    <td> {{ family_member.childmore.gender }}</td>
-                                    <td> {{ family_member.dietary_req|yesno:"Yes," }}</td>
-                                    <td> {{ family_member.medical_req|yesno:"Yes," }}</td>
-                                    <td> {{ family_member.childmore.fsm|yesno:"Yes," }}</td>
-                                    <td> {{ family_member.childmore.sen|yesno:"Yes," }}</td>
-                                    <td> {{ family_member.childmore.school|default:'' }}</td>
-
-                                </tr>
-                                {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="card-footer text-muted text-center">
-                    <a type="button" class="btn btn-info" href="{% url 'account_update'  %}">{% trans "Update Profile" %}</a>
-                    <a type="button" class="btn btn-info" href="{% url 'family-members' %}">{% trans "Update Family Members" %}</a>
-                </div>
-           </div>
+<div class="card">
+  <h4 class="card-header">{% trans "Account Profile" %}</h4>
+  <h5 class="card-header">{{ user.email }}</h5>
+  <div class="card-body">
+    <div class="container">
+      <div class="row">
+        <div class="col border">
+          <small>{% trans "First name" %}:</small><br>
+          {{ user.first_name|default:'' }}
         </div>
+        <div class="col border">
+          <small>{% trans "Last name" %}:</small><br>
+          {{ user.last_name|default:'' }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col border">
+          <small>{% trans "E-mail" %}:</small><br>
+          {{ user.email }}
+        </div>
+        <div class="col border">
+          <small>{% trans "Family descriptive name" %}:</small><br>
+          {{ user.family_name }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col border">
+          <small>{% trans "Post Code" %}:</small><br>
+          {{ user.post_code }}
+        </div>
+        <div class="col border">
+          <small>{% trans "City" %}:</small><br>
+          {{ user.city }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col border">
+          <small>{% trans "Photo consent?" %}:</small><br>
+          {{ user.photo_consent|yesno:'Yes,No' }}
+        </div>
+        <div class="col border">
+          <small>{% trans "Contact mobile phone" %}:</small><br>
+          {{ user.contact_number }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col border">
+          <small>{% trans "Additional Information" %}:</small><br>
+          {{ user.additional_information }}
+        </div>
+      </div>
     </div>
+  </div>
+
+  <div class="card-footer text-muted">
+    <a type="button" class="btn btn-info" href="{% url 'account_update'  %}">{% trans "Update Profile" %}</a>
+  </div>
+</div>
+
+<div class="card">
+  <h4 class="card-header">Family Members</h4>
+  <div class="card-body">
+    <table class="table table-striped mt-5" style="width: 100% sortable">
+      <thead>
+        <tr>
+          <th scope="col">Parent/Child</th>
+          <th scope="col">Name</th>
+          <th scope="col">DoB</th>
+          <th scope="col">Age</th>
+          <th scope="col">Gender</th>
+          <th scope="col">Dietary</th>
+          <th scope="col">Medical</th>
+          <th scope="col">FSM</th>
+          <th scope="col">SEN</th>
+          <th scope="col">School</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for family_member in family_members %}
+        <tr>
+          <td> {{ family_member.get_type_display }}</td>
+          <td> {{ family_member }}</td>
+          <td> {{ family_member.childmore.dob|date:'j/m/Y' }}</td>
+          <td class="text-center"> {{ family_member.childmore.years_old }}</td>
+          <td> {{ family_member.childmore.gender }}</td>
+          <td class="text-center"> {{ family_member.dietary_req|yesno:"Yes," }}</td>
+          <td class="text-center"> {{ family_member.medical_req|yesno:"Yes," }}</td>
+          <td class="text-center"> {{ family_member.childmore.fsm|yesno:"Yes," }}</td>
+          <td class="text-center"> {{ family_member.childmore.sen|yesno:"Yes," }}</td>
+          <td> {{ family_member.childmore.school|default:'' }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="card-footer text-muted">
+    <a type="button" class="btn btn-info" href="{% url 'family-members' %}">{% trans "Update Family Members" %}</a>
+  </div>
 </div>
 
 {% endblock content %}
