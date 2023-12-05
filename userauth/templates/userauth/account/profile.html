@@ -90,7 +90,7 @@
           <td> {{ family_member }}</td>
           <td> {{ family_member.childmore.dob|date:'j/m/Y' }}</td>
           <td class="text-center"> {{ family_member.childmore.years_old }}</td>
-          <td> {{ family_member.childmore.gender }}</td>
+          <td> {{ family_member.childmore.get_gender_display }}</td>
           <td class="text-center"> {{ family_member.dietary_req|yesno:"Yes," }}</td>
           <td class="text-center"> {{ family_member.medical_req|yesno:"Yes," }}</td>
           <td class="text-center"> {{ family_member.childmore.fsm|yesno:"Yes," }}</td>
