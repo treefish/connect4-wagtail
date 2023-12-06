@@ -99,9 +99,9 @@ class EventAttendanceView(LoginRequiredMixin, UserPassesTestMixin, EventBaseView
         children_not_attended_list = children_list.filter(attended=False)
 
         # Child (< 4>) Toddler / Youngster
-        ids = [attendance.id for attendance in children_attended_list if attendance.family_member.childmore.is_youngster]
+        ids = [attendance.id for attendance in children_attended_list if attendance.family_member.childmore.is_toddler]
         stats['children_lt_4_attended_total'] = children_attended_list.filter(id__in=ids).count()
-        ids = [attendance.id for attendance in children_not_attended_list if attendance.family_member.childmore.is_youngster]
+        ids = [attendance.id for attendance in children_not_attended_list if attendance.family_member.childmore.is_toddler]
         stats['children_lt_4_not_attended_total'] = children_not_attended_list.filter(id__in=ids).count()
         stats['children_lt_4_total'] = stats['children_lt_4_attended_total'] + stats['children_lt_4_not_attended_total']
 
