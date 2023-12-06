@@ -5,6 +5,10 @@ urlpatterns = [
     path("", views.EventListView.as_view(), name="events"),
     path("event/<int:pk>/detail/", views.EventDetailView.as_view(), name="event_detail"),
     path("event/<int:pk>/bookings/", views.EventBookingsListView.as_view(), name="event_bookings_list"),
+
+    # Reporting (from connect4-django)
+    path("event/<int:pk>/attendance_list/", views.EventAttendanceView.as_view(), name="event_attendance_list"),
+
     # path('event/create/', views.EventCreateView.as_view(), name='event_create'),
     # path('event/<int:pk>/update/', views.EventUpdateView.as_view(), name='event_update'),
     # path('event/<int:pk>/delete/', views.EventDeleteView.as_view(), name='event_delete'),
@@ -15,8 +19,8 @@ urlpatterns = [
     #      name="upload_wp_attendance_register"),
     # path("event/<int:pk>/upload_attendance_register_daily/", views.UploadAttendanceRegisterDaily.as_view(),
     #      name="upload_attendance_register_daily"),
-    # path("event/<int:pk>/download_attendance_register_daily/", views.DownloadAttendanceRegisterDaily.as_view(),
-    #      name="download_attendance_register_daily"),
+    path("event/<int:pk>/download_attendance_register_daily/", views.DownloadAttendanceRegisterDaily.as_view(),
+         name="download_attendance_register_daily"),
     #
     # path("projects", views.ProjectListView.as_view(), name="projects"),
     # path("project/<int:pk>/detail/", views.ProjectDetailView.as_view(),

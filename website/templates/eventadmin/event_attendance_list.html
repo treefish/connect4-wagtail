@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Event Attendance Details{% endblock title %}
+
+{% block content %}
+<div class="container d-flex mt-5" style="width: 100%;">
+    <div class="col">
+        <h1 class="text-center">Event Attendance (Admin)</h1>
+        <h2 class="text-center">{{ event.name }}</h2>
+        <div class="d-flex justify-content-center">
+            <table class="table table-striped mt-5" style="width: 70%">
+                <thead>
+                  <tr>
+                    {% comment %} <th>#</th> {% endcomment %}
+                    <th class="text-end" scope="col"></th>
+                    <th class="text-end" scope="col">Registered</th>
+                    <th class="text-end" scope="col">Attended</th>
+                    <th class="text-end" scope="col">Not Attended</th>
+                  </tr>
+                </thead>
+                <tbody>
+                   <tr class="text-end">
+                       <td>Parents</td>
+                       <td>{{ stats.parents_total }}</td>
+                       <td>{{ stats.parents_attended_total }}</td>
+                       <td>{{ stats.parents_not_attended_total }}</td>
+                   </tr>
+                   <tr class="text-end">
+                       <td>Children < 4</td>
+                       <td>{{ stats.children_lt_4_total }}</td>
+                       <td>{{ stats.children_lt_4_attended_total }}</td>
+                       <td>{{ stats.children_lt_4_not_attended_total }}</td>
+                   </tr>
+                   <tr class="text-end">
+                       <td>Children 4-10 Primary</td>
+                       <td>{{ stats.children_4_10_total }}</td>
+                       <td>{{ stats.children_4_10_attended_total }}</td>
+                       <td>{{ stats.children_4_10_not_attended_total }}</td>
+                   </tr>
+                   <tr class="text-end">
+                       <td>Children 11-16 Secondary/Teenager</td>
+                       <td>{{ stats.teens_total }}</td>
+                       <td>{{ stats.teens_attended_total }}</td>
+                       <td>{{ stats.teens_not_attended_total }}</td>
+                   </tr>
+                   <tr class="text-end">
+                       <td>Children 17+ Post-teen</td>
+                       <td>{{ stats.post_teens_total }}</td>
+                       <td>{{ stats.post_teens_attended_total }}</td>
+                       <td>{{ stats.post_teens_not_attended_total }}</td>
+                   </tr>
+                   <tr class="text-end">
+                       <td>Total</td>
+                       <td>{{ stats.registered_total }}</td>
+                       <td>{{ stats.attended_total }}</td>
+                       <td>{{ stats.not_attended_total }}</td>
+                   </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="d-flex justify-content-center">
+            <table class="table table-striped mt-5" style="width: 70%">
+                <thead>
+                  <tr>
+                    {% comment %} <th>#</th> {% endcomment %}
+                    <th class="text-end" scope="col">Catgeory</th>
+                    <th class="text-end" scope="col">#</th>
+                  </tr>
+                </thead>
+                <tbody>
+                   <tr class="text-end">
+                       <td><B>Children 4-10 / Primary Attended</B></td>
+                       <td><B>{{ stats.children_4_10_attended_total }}</B></td>
+                   </tr>
+                   <tr class="text-end">
+                       <td>FSM, SEN</td>
+                       <td>{{ stats.children_4_10_attended_fsm_sen_total }}</td>
+                   </tr>
+                   <tr class="text-end">
+                       <td>FSM, Non-SEN</td>
+                       <td>{{ stats.children_4_10_attended_fsm_non_sen_total }}</td>
+                   </tr>
+                   <tr class="text-end">
+                       <td>Non-FSM, SEN</td>
+                       <td>{{ stats.children_4_10_attended_non_fsm_sen_total }}</td>
+                   </tr>
+                   <tr class="text-end">
+                       <td>Non-FSM, Non-SEN</td>
+                       <td>{{ stats.children_4_10_attended_non_fsm_non_sen_total }}</td>
+                   </tr>
+
+                   <tr class="text-end">
+                       <td><B>Children 11-16 / Secondary/Teenagers Attended</B></td>
+                       <td><B>{{ stats.teens_attended_total }}</B></td>
+                   </tr>
+                   <tr class="text-end">
+                       <td>FSM, SEN</td>
+                       <td>{{ stats.teens_attended_fsm_sen_total }}</td>
+                   </tr>
+                   <tr class="text-end">
+                       <td>FSM, Non-SEN</td>
+                       <td>{{ stats.teens_attended_fsm_non_sen_total }}</td>
+                   </tr>
+                   <tr class="text-end">
+                       <td>Non-FSM, SEN</td>
+                       <td>{{ stats.teens_attended_non_fsm_sen_total }}</td>
+                   </tr>
+                   <tr class="text-end">
+                       <td>Non-FSM, Non-SEN</td>
+                       <td>{{ stats.teens_attended_non_fsm_non_sen_total }}</td>
+                   </tr>
+                </tbody>
+            </table>
+
+        </div>
+
+        <div class="container mt-3">
+            <button type="button" class="btn btn-info" data-bs-toggle="collapse" data-bs-target="#attendee_list">Show Attendees</button>
+        </div>
+
+        <div class="d-flex justify-content-center">
+            <a href="{% url 'event_detail' eventpage.id %}" class="d-block btn btn-primary btn-lg my-5">Back</a>
+        </div>
+
+        <div id="attendee_list" class="collapse hide">
+        <table class="table table-striped mt-5 sortable">
+            <thead>
+                <tr>
+                    {% comment %} <th>#</th> {% endcomment %}
+                    <th class="text-left" scope="col">Family member</th>
+                    <th class="text-left" scope="col">Parent/Child</th>
+                    <th class="text-left" scope="col">Attended</th>
+                    <th class="text-left" scope="col">Age</th>
+                    <th class="text-left" scope="col">DoB</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for attendance in attendance_list %}
+                <tr>
+                    {% comment %} <th scope="row">{{ forloop.counter }}</th> {% endcomment %}
+                    <td class="ml-5"><a href="#">{{ attendance.family_member }}</a></td>
+                    <td class="ml-5">{% if attendance.family_member.type == "CHILD" %}Child{% else %}Parent{% endif %}</td>
+                    <td class="ml-5 {% if attendance.attended %}text-success{% else %}text-danger{% endif %}">{{ attendance.attended|yesno:"Yes,No" }}</td>
+                    <td class="ml-5 text-end">{{ attendance.family_member.childmore.years_old }}</a></td>
+                    <td class="ml-5 text-end">{{ attendance.family_member.childmore.dob|date:'j/m/Y' }}</a></td>
+                </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+        </div>
+    </div>
+
+</div>
+
+{% endblock content %}

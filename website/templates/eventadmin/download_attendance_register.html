@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5" style="width: 100%;">
+    <div class="col">
+        <h1 class="text-center">Project Details (Admin)</h1>
+        <div class="d-flex justify-content-center">
+            <table class="table table-striped mt-5" style="width: 100%">
+                <thead>
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                  <tr><td>Name</td><td>{{ project.name }}</td></tr>
+                  <tr><td>Description</td><td>{{ project.description }}</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+    <div class="bd-example-snippet bd-code-snippet">
+        <a href="{% url 'eventadmin:projects' %}" class="d-block btn btn-primary btn-lg my-5">Projects</a>
+    </div>
+
+
+
+<!--    <div class="container mt-3">-->
+<!--        <button type="button" class="btn btn-info" data-bs-toggle="collapse" data-bs-target="#event_list">Show Events</button>-->
+<!--&lt;!&ndash;        <button type="button" class="btn btn-info" data-bs-toggle="collapse" data-bs-target="#adgroups">Show AD Groups</button>&ndash;&gt;-->
+<!--    </div>-->
+
+<!--    <div id="event_list" class="collapse hide">-->
+<!--        <table class="table table-striped mt-5 sortable">-->
+<!--            <thead>-->
+<!--                <tr>-->
+<!--                    {% comment %} <th>#</th> {% endcomment %}-->
+<!--                    <th class="text-left" scope="col">Event</th>-->
+<!--                </tr>-->
+<!--            </thead>-->
+<!--            <tbody>-->
+
+<!--                <tr>-->
+<!--                    {% comment %} <th scope="row">{{ forloop.counter }}</th> {% endcomment %}-->
+<!--                    <td class="ml-5"><a href="#">Event name</a></td>-->
+<!--                </tr>-->
+
+
+<!--            </tbody>-->
+<!--        </table>-->
+<!--    </div>-->
+
+</div>
+
+{% endblock  %}
