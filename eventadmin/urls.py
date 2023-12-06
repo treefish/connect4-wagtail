@@ -17,10 +17,11 @@ urlpatterns = [
     # path("event/<int:pk>/bookings/", views.EventBookingsView.as_view(), name="event_bookings_list"),
     # path("event/<int:pk>/upload_wp_attendance_register/", views.UploadWPAttendanceRegister.as_view(),
     #      name="upload_wp_attendance_register"),
-    # path("event/<int:pk>/upload_attendance_register_daily/", views.UploadAttendanceRegisterDaily.as_view(),
-    #      name="upload_attendance_register_daily"),
+
     path("event/<int:pk>/download_attendance_register_daily/", views.DownloadAttendanceRegisterDaily.as_view(),
          name="download_attendance_register_daily"),
+    path("event/<int:pk>/upload_attendance_register_daily/", views.UploadAttendanceRegisterDaily.as_view(),
+         name="upload_attendance_register_daily"),
     #
     # path("projects", views.ProjectListView.as_view(), name="projects"),
     # path("project/<int:pk>/detail/", views.ProjectDetailView.as_view(),

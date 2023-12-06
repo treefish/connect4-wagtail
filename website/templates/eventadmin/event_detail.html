@@ -42,7 +42,7 @@
         <div class="bd-example-snippet bd-code-snippet">
           <a class="btn btn-info" href="{% url 'event_attendance_list' eventpage.id %}" role="button">Summary</a>
           <a class="btn btn-info" href="{% url 'download_attendance_register_daily' eventpage.id %}" role="button">Download</a>
-          <a class="btn btn-info" href="#" role="button">Upload</a>
+          <a class="btn btn-info" href="{% url 'upload_attendance_register_daily' eventpage.id %}" role="button">Upload</a>
         </div>
         <div class="bd-example-snippet bd-code-snippet">
           <a href="{% url 'events' %}" class="d-block btn btn-primary btn-lg my-5">Events</a>

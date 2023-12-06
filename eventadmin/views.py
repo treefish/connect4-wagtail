@@ -3,6 +3,7 @@ from django.views import View
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 #from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
+from django.views.generic.edit import FormView
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
@@ -14,11 +15,10 @@ from django.db.models import Count
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 
-#from .forms import forms
-# For Wordpress stuff
-#from .utils import *
+from .forms import UploadAttendanceRegisterForm
 from .utils import (
     create_attendance_register_daily,
+    import_attendance_register_daily
 )
 
 def is_member(user):
@@ -71,9 +71,14 @@ class EventBookingsListView(LoginRequiredMixin, UserPassesTestMixin, EventBaseVi
 # These functions/classes are taken from connect4-django app
 ########################################################################################################################
 
-class EventAttendanceView(EventBaseView, DetailView):
+class EventAttendanceView(LoginRequiredMixin, UserPassesTestMixin, EventBaseView, DetailView):
     template_name = 'eventadmin/event_attendance_list.html'
     paginate_by = 50
+
+
+    def test_func(self):
+        return is_member(self.request.user)
+
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -183,8 +188,12 @@ class EventAttendanceView(EventBaseView, DetailView):
         return context
 
 
-class DownloadAttendanceRegisterDaily(EventBaseView, DetailView):
+class DownloadAttendanceRegisterDaily(LoginRequiredMixin, UserPassesTestMixin, EventBaseView, DetailView):
     template_name = 'eventadmin/download_attendance_register.html'
+
+    def test_func(self):
+        return is_member(self.request.user)
+
 
     def get(self, request, *args, **kwargs):
         event = super().get_object()
@@ -192,3 +201,54 @@ class DownloadAttendanceRegisterDaily(EventBaseView, DetailView):
         create_attendance_register_daily(event, filename)
         success_url = f"/media/admin/{filename}"
         return redirect(success_url)
+
+
+class UploadAttendanceRegisterDaily(LoginRequiredMixin, UserPassesTestMixin, EventBaseView, FormView):
+    '''
+    Upload a pre-generated Attendance Register Daily and updates the Booking & Attendance entries for the event
+    found in the spreadsheet.
+    Refer:
+    https://docs.djangoproject.com/en/4.2/ref/files/uploads
+    https://www.andygoldschmidt.com/2014/09/10/django-file-uploads-with-class-based-views/
+
+    Note: This will need to be modified to use Celery as it takes a while to process the spreadsheet. Using Celery to
+    offload the processing will return the page back to the user much more quickly.
+    Can also then use something like a Progress Bar to keep the user updated on progress.
+    Refer:
+    https://www.freecodecamp.org/news/how-to-build-a-progress-bar-for-the-web-with-django-and-celery-12a405637440/
+    '''
+    template_name = "eventadmin/upload_attendance_register_daily.html"
+    # Might be able to use the same form as WP AR
+    form_class = UploadAttendanceRegisterForm
+
+
+    def test_func(self):
+        return is_member(self.request.user)
+
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST, request.FILES)
+        if form.is_valid():
+            context = super().get_context_data(**kwargs)
+            event_id = self.kwargs['pk']
+            print(f"Handling the FORM for event {event_id}!")
+            file = request.FILES["file"]
+            print(f"Uploaded: {file.name} - Type: {file.content_type}")  # {file.temporary_file_path}")
+
+            # Let's check the file type at least.
+            if file.content_type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+                # Save to disk so it can be read by Openpyxl
+                with open(f"media/admin/{file.name}", "wb+") as destination:
+                    for chunk in file.chunks():
+                        destination.write(chunk)
+
+                # Process the uploaded Attendance Register spreadsheet into Booking and Attendance entries.
+                # Note: The events in the spreadsheet will have event_id associated, so
+                # it doesn't actually matter if the spreadsheet is for this project or not.
+                import_attendance_register_daily(f"media/admin/{file.name}", event_id)
+            else:
+                print(f"Incorrect file type for uploaded Attendance Register! Type is '{file.content_type}'")
+            success_url = reverse_lazy('event_detail', kwargs = {'pk': event_id})
+            return redirect(success_url)
+        else:
+            return render(request, self.template_name, {'form': form})

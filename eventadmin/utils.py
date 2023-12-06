@@ -22,7 +22,7 @@ from django.contrib.auth import get_user_model
 from events.models import EventPage
 from bookings.models import Booking, Attendance
 
-# from registration.models import Family, FamilyMember
+from registration.models import FamilyMember
 # from registration.stats import FamilyMemberStats
 # from events.models import Project, EventType, Event, Booking, Attendance
 
@@ -90,3 +90,106 @@ def create_attendance_register_daily(event, filename):
     # Save spreadsheet
     workbook.save(filename=f"media/admin/{filename}")
     workbook.close()
+
+
+########################################################################################################################
+#                                                                                                                      #
+########################################################################################################################
+def import_attendance_register_daily(filename, event_id):
+    """
+    This function loads an Attendance Register Daily spreadsheet that has been downloaded from this website.
+    It creates/updates bookings (Booking) and Attendance entries for Family Members/Attendees (Attendance).
+    Check this spreadsheet has the right event_id.
+
+    It is called from the Event Detail page.
+    """
+    # Get the Event
+    try:
+        event = EventPage.objects.get(id=event_id)
+        print(f" - Found event: {event} ({event.event_type})")
+    except EventPage.DoesNotExist:
+        print(f" - No such event! Cannot proceed.")
+        return
+
+    print(f"+++++++++++ Sheet {filename} +++++++++++")
+    ws_date_format = "%d-%b"
+    wb = load_workbook(filename=filename, data_only=True)
+    event_ws = wb.active
+    print(f"Processing: {event.id}\t{event.title}")
+    unfound_members_list = []
+    bad_sen_detail = ['none', 'n/a', 'na', 'no', '-', 'fsm']   # Use to clean up SEN detail
+    row = 8
+    first_name = event_ws[f"A{row}"].value
+    while isinstance(first_name, str):
+        last_name = event_ws[f"B{row}"].value
+        family_member_id = event_ws[f"R{row}"].value
+        attended_value = event_ws[f"H{row}"].value
+        attended = (
+            True if (attended_value == 1) or (attended_value == "Present") else False
+        )
+        print(f"    - {row}\t{first_name} {last_name}\t {family_member_id}\t{attended}")
+        try:
+            # Find the Family member first, keyed to 'id'.
+            family_member = FamilyMember.objects.get(id=family_member_id)
+            print(
+                f"      - Found family_member: {family_member.id}\t{family_member}"
+            )
+            # Check if names are the same. Could be a legit name change, especially last name, but both names different would suggest
+            # the wp_member_id is not unique.
+            if (family_member.first_name != first_name) or (
+                family_member.last_name != last_name
+            ):
+                unfound_members_list.append(f"{family_member_id} - {first_name} {last_name}")
+                print(
+                    f"      - ! {family_member.first_name} {family_member.last_name} is NOT the same as {first_name} {last_name}"
+                )
+                row += 1
+                first_name = event_ws[f"A{row}"].value
+                continue
+
+            # Find or Create the Booking for the Registrant/Organiser
+            user = User.objects.get(family_member=family_member)
+            print(f"      - Found family: {user.family_name}")
+            booking, created = Booking.objects.get_or_create(family=user, event=event)
+            if created:
+                print(f"      - Creating new booking.")
+            else:
+                print(f"      - Booking already created.")
+
+            # Find or Create the Attendance entry for the Person
+            attendance, created = Attendance.objects.get_or_create(
+                booking=booking,
+                family_member=family_member,
+            )
+            attendance.attended = attended
+            attendance.save()
+
+            # Update other fields as required.
+            # SEN - Col D - text of SEN details.
+            # Could try to weed out incorrect ones - a list of No, None, n/a, etc
+            #print(f"      - Updating SEN info.")
+            if family_member.type == "CHILD":
+                sen_detail = str(event_ws[f"D{row}"].value).strip() if event_ws[f"D{row}"].value else ""
+                if len(sen_detail) == 0:
+                    family_member.childmore.sen_detail = ""
+                    family_member.childmore.sen_req = False
+                elif sen_detail.lower() in bad_sen_detail:
+                    print(f"      - Updating SEN info - removing {sen_detail}.")
+                    family_member.childmore.sen_detail = ""
+                    family_member.childmore.sen_req = False
+                else:
+                    family_member.childmore.sen_detail = sen_detail
+                    family_member.childmore.sen_req = True
+                family_member.childmore.save()
+
+        except FamilyMember.DoesNotExist:
+            unfound_members_list.append(f"{wp_member_id} - {first_name} {last_name}")
+            print(f"  *** No such Family Member: {wp_member_id} - {first_name} {last_name}")
+
+        row += 1
+        first_name = event_ws[f"A{row}"].value
+
+    wb.close()
+    print(f"Unfound Family members: {len(unfound_members_list)}")
+    for unfound in unfound_members_list:
+        print(f"- {unfound}")
