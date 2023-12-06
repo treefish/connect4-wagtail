@@ -9,7 +9,7 @@ class CustomUser(AbstractUser):
     family_name = models.CharField(
         "Family Name",
         max_length=70,
-        default="Please provide a name for the family.",
+        default="Please provide a descriptive name for the family.",
         help_text="This is a descriptive name for the family for display and sorting purposes only e.g. Addams Family",
     )
     # For the Family as a whole - i.e. all members. This is primarily for Youth Events where a Parent/Caregiver will not be present.
