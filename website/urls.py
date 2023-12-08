@@ -9,6 +9,7 @@ from wagtail.contrib.sitemaps.views import sitemap
 from search import views as search_views
 
 urlpatterns = [
+    path('admin/', include('loginas.urls')),
     path("django-admin/", admin.site.urls),
     path("admin/", include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),

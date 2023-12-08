@@ -25,4 +25,6 @@ class CustomUserAdmin(UserAdmin):
         FamilyMemberInline,
     ]
 
+    change_form_template = 'loginas/change_form.html'
+
 admin.site.register(CustomUser, CustomUserAdmin)

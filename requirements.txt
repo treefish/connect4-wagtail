@@ -19,4 +19,4 @@ celery
 django-celery-beat
 flower
 django-turnstile
-
+django-loginas

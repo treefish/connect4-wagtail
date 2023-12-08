@@ -32,8 +32,8 @@ urlpatterns = [
          name="project_unique_attendees_list"),
     # path("project/<int:pk>/upload_attendance_register/", views.UploadAttendanceRegister.as_view(),
     #      name="upload_attendance_register"),
-    # path("project/<int:pk>/download_attendance_register/", views.DownloadAttendanceRegister.as_view(),
-    #      name="download_attendance_register"),
+    path("project/<int:pk>/download_attendance_register/", views.DownloadAttendanceRegister.as_view(),
+         name="download_attendance_register"),
     # path("project/<int:pk>/download_master_weekly_monitoring_statement/", views.DownloadMasterWeeklyMonitoringStatement.as_view(),
     #      name="download_master_weekly_monitoring_statement"),
 

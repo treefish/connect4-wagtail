@@ -82,6 +82,7 @@ INSTALLED_APPS = [
     "crispy_bootstrap5",
     "django_celery_beat",
     "turnstile",
+    "loginas",
 ]
 
 MIDDLEWARE = [

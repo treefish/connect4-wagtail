@@ -193,3 +193,116 @@ def import_attendance_register_daily(filename, event_id):
     print(f"Unfound Family members: {len(unfound_members_list)}")
     for unfound in unfound_members_list:
         print(f"- {unfound}")
+
+
+########################################################################################################################
+#  Projects                                                                                                            #
+########################################################################################################################
+def create_attendance_register(project_id, filename):
+    workbook = load_workbook(filename="data/attendance_register.xlsx")
+    workbook.iso_dates = True
+    template_sheet = workbook["Day Register"]
+    tz = pytz.timezone('Pacific/Auckland')
+    ws_date_format = "%d-%b"
+
+    # Get the Project
+    project = Project.objects.get(id=project_id)
+    print(f"* Project: {project}")
+
+    # Just Family Events for now. May need to create a different function for Youth Events.
+    event_type = EventType.objects.get(name="Family Fun Day")
+    events_list = Event.objects.filter(project=project, event_type=event_type).order_by(
+        "start_date"
+    )
+    # For each Event in the Project
+    summary_seq = 4  # Row in Summary worksheet to write summary info.
+    for event in events_list:
+        summary_seq += 1
+        event_date = event.start_date.astimezone(tz).replace(tzinfo=None)
+        # Copy the template worksheet to a new one for the event, naming it with the date of the event, e.g. 03-Apr
+        ws_name = event_date.astimezone(tz).strftime(ws_date_format)
+        print(f"  - Event: {event}\t{ws_name}")
+        event_ws = workbook.copy_worksheet(template_sheet)
+        event_ws.title = ws_name
+        event_ws["B1"] = event.name
+        event_ws["B2"] = event_date
+        event_ws["B3"] = event.week
+
+        # Loop through booked attendees and copy their info into a row for each, starting at Row 6.
+        row = 7
+        current_family_name = ""
+
+# The block here is from daily. Compare!
+        # bookings = Booking.objects.filter(event=event)
+        # attendance_list = (
+        #     Attendance.objects.select_related("family_member__family")
+        #     .select_related("booking__family__registrant")
+        #     .filter(booking__in=bookings)
+        #     .order_by(
+        #         "booking__family__registrant__last_name",
+        #         "booking__family__registrant__first_name",
+        #     )
+        # )
+        #
+
+        for attendee in (
+            Attendance.objects.filter(booking__event=event).select_related("family_member__family")
+            .select_related("booking__family__registrant")
+            .order_by("booking__family__registrant__last_name")
+            .order_by("booking__family__registrant__first_name")
+        ):
+            row += 1
+            family_member = attendee.family_member
+            registrant = f"{attendee.booking.family.registrant.first_name} {attendee.booking.family.registrant.last_name}"
+            print(f"    - Attendee: {row - 7}\t{family_member}")
+            event_ws[f"A{row}"] = family_member.first_name
+            event_ws[f"B{row}"] = family_member.last_name
+            event_ws[f"E{row}"] = family_member.type.capitalize()
+            event_ws[f"H{row}"] = 1 if attendee.attended else ""
+            event_ws[f"Q{row}"] = family_member.wp_member_id
+            if family_member.type == "CHILD":
+                event_ws[f"C{row}"] = 1 if family_member.childmore.fsm else ""
+                event_ws[f"D{row}"] = (
+                    family_member.childmore.sen_detail
+                    if family_member.childmore.sen_req
+                    else ""
+                )
+                event_ws[f"F{row}"] = family_member.childmore.dob
+
+            family_name = family_member.family.family_name
+
+            if not current_family_name == family_name:
+                event_ws[f"R{row}"] = registrant
+                event_ws[f"R{row}"].fill = copy(event_ws["R1"].fill)
+                event_ws[f"S{row}"] = family_name
+                event_ws[f"S{row}"].fill = copy(event_ws["R1"].fill)
+                current_family_name = family_name
+
+        # Add Summary info
+        summary_ws = workbook["Summary"]
+        summary_ws[f"B1"] = event.project.name
+        summary_ws[f"A{summary_seq}"] = event.id
+        summary_ws[f"B{summary_seq}"] = event.name
+        summary_ws[f"C{summary_seq}"] = event_ws["B3"].value
+        summary_ws[f"D{summary_seq}"] = event_ws["B2"].value
+        summary_ws[f"E{summary_seq}"] = event_ws[
+            "B2"
+        ].value
+        summary_ws[f"F{summary_seq}"] = f"={utils.quote_sheetname(event_ws.title)}!B5"
+        summary_ws[f"G{summary_seq}"] = f"={utils.quote_sheetname(event_ws.title)}!H5"
+        summary_ws[f"H{summary_seq}"] = f"={utils.quote_sheetname(event_ws.title)}!C5"
+        summary_ws[f"I{summary_seq}"] = f"={utils.quote_sheetname(event_ws.title)}!D5"
+        summary_ws[f"J{summary_seq}"] = f"={utils.quote_sheetname(event_ws.title)}!I5"
+        summary_ws[f"K{summary_seq}"] = f"={utils.quote_sheetname(event_ws.title)}!J5"
+        summary_ws[f"L{summary_seq}"] = f"={utils.quote_sheetname(event_ws.title)}!K5"
+        summary_ws[f"M{summary_seq}"] = f"={utils.quote_sheetname(event_ws.title)}!L5"
+        summary_ws[f"N{summary_seq}"] = f"={utils.quote_sheetname(event_ws.title)}!M5"
+        summary_ws[f"O{summary_seq}"] = f"={utils.quote_sheetname(event_ws.title)}!N5"
+        summary_ws[f"P{summary_seq}"] = f"={utils.quote_sheetname(event_ws.title)}!O5"
+        summary_ws[f"Q{summary_seq}"] = f"={utils.quote_sheetname(event_ws.title)}!P5"
+        summary_ws[f"R{summary_seq}"] = f"={utils.quote_sheetname(event_ws.title)}!U5"
+
+    # Save spreadsheet
+    workbook.remove(workbook["Day Register"])
+    workbook.save(filename=f"media/admin/{filename}")
+

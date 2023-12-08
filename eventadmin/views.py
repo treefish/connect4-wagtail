@@ -18,7 +18,8 @@ from django.http import HttpResponseRedirect
 from .forms import UploadAttendanceRegisterForm
 from .utils import (
     create_attendance_register_daily,
-    import_attendance_register_daily
+    import_attendance_register_daily,
+    create_attendance_register,
 )
 
 def is_member(user):
@@ -353,3 +354,13 @@ class ProjectUniqueAttendeesView(ProjectBaseView, DetailView):
         # context['family'] = Family.objects.get(registrant=self.request.user)
         return context
 
+
+class DownloadAttendanceRegister(ProjectBaseView, DetailView):
+    template_name = 'eventadmin/download_attendance_register.html'
+
+    def get(self, request, *args, **kwargs):
+        project = super().get_object()
+        filename = f"Attendance Register - {project.name}.xlsx"
+        create_attendance_register(project.id, filename)
+        success_url = f"/media/admin/{filename}"
+        return redirect(success_url)
