@@ -360,7 +360,7 @@ class DownloadAttendanceRegister(ProjectBaseView, DetailView):
 
     def get(self, request, *args, **kwargs):
         project = super().get_object()
-        filename = f"Attendance Register - {project.name}.xlsx"
+        filename = f"Attendance Register - {project.title}.xlsx"
         create_attendance_register(project.id, filename)
         success_url = f"/media/admin/{filename}"
         return redirect(success_url)

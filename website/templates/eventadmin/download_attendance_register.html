@@ -14,14 +14,14 @@
                     </tr>
                 </thead>
                 <tbody>
-                  <tr><td>Name</td><td>{{ project.name }}</td></tr>
+                  <tr><td>Name</td><td>{{ project.title }}</td></tr>
                   <tr><td>Description</td><td>{{ project.description }}</td></tr>
                 </tbody>
             </table>
         </div>
 
     <div class="bd-example-snippet bd-code-snippet">
-        <a href="{% url 'eventadmin:projects' %}" class="d-block btn btn-primary btn-lg my-5">Projects</a>
+        <a href="{% url 'projects' %}" class="d-block btn btn-primary btn-lg my-5">Projects</a>
     </div>
 
 

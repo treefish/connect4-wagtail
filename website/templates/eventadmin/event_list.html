@@ -32,7 +32,7 @@
                     <td class="ml-5"><a href="{% url 'event_detail' event.id %}">{{event.title}}</a></td>
                     <td class="text-center">{{event.start_date|date:'j/m/Y'}}</td>
                     <td class="text-center">{{event.event_type}}</td>
-                    <td class="text-center"><a href="{{ event.get_parent.url }}">{{event.get_parent}}</a></td>
+                    <td class="text-center"><a href="{% url 'project_detail' event.get_parent.id %}">{{event.get_parent}}</a></td>
                     <td class="text-center">{{event.week}}</td>
                     <td class="text-center">{{event.capacity}}</td>
                     <td class="text-center">{{event.spaces_available}}</td>
@@ -40,7 +40,7 @@
                     <td class="text-center">{{event.num_child_attendees}}</td>
                     <td class="text-center">{{event.num_fsm_attendees}}</td>
                     <td class="text-center">{{event.num_sen_attendees}}</td>
-                    <td class="text-center">{{event.live|yesno:"Yes,No"}}</td>
+                    <td class="text-center">{% if event.live %}<a href="{{ event.get_parent.url }}">Yes</a>{% else %}No{% endif %}</td>
                     <td class="text-center">{{event.bookable|yesno:"Yes,No"}}</td>
                 </tr>
                 {% endfor %}

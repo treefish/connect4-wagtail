@@ -19,7 +19,7 @@ from copy import copy
 # from django.db.models import Count
 from django.contrib.auth import get_user_model
 
-from events.models import EventPage
+from events.models import ProjectPage, EventPage, EventType
 from bookings.models import Booking, Attendance
 
 from registration.models import FamilyMember
@@ -199,24 +199,29 @@ def import_attendance_register_daily(filename, event_id):
 #  Projects                                                                                                            #
 ########################################################################################################################
 def create_attendance_register(project_id, filename):
-    workbook = load_workbook(filename="data/attendance_register.xlsx")
+    workbook = load_workbook(filename="data/templates/attendance_register.xlsx")
     workbook.iso_dates = True
     template_sheet = workbook["Day Register"]
     tz = pytz.timezone('Pacific/Auckland')
     ws_date_format = "%d-%b"
 
     # Get the Project
-    project = Project.objects.get(id=project_id)
-    print(f"* Project: {project}")
+    try:
+        project = ProjectPage.objects.get(id=project_id)
+        print(f" - Found Project: {project}")
+    except ProjectPage.DoesNotExist:
+        print(f" - No such Project! Cannot proceed.")
+        return
 
     # Just Family Events for now. May need to create a different function for Youth Events.
-    event_type = EventType.objects.get(name="Family Fun Day")
-    events_list = Event.objects.filter(project=project, event_type=event_type).order_by(
-        "start_date"
-    )
+    event_type = EventType.objects.get(name="Family Fun Days")
+    event_list = EventPage.objects.live().descendant_of(project).filter(event_type=event_type).order_by("-start_date")
+    #events_list = EventPage.objects.filter(projectpage=project, event_type=event_type).order_by(
+    #     "start_date"
+    # )
     # For each Event in the Project
     summary_seq = 4  # Row in Summary worksheet to write summary info.
-    for event in events_list:
+    for event in event_list:
         summary_seq += 1
         event_date = event.start_date.astimezone(tz).replace(tzinfo=None)
         # Copy the template worksheet to a new one for the event, naming it with the date of the event, e.g. 03-Apr
@@ -224,7 +229,7 @@ def create_attendance_register(project_id, filename):
         print(f"  - Event: {event}\t{ws_name}")
         event_ws = workbook.copy_worksheet(template_sheet)
         event_ws.title = ws_name
-        event_ws["B1"] = event.name
+        event_ws["B1"] = event.title
         event_ws["B2"] = event_date
         event_ws["B3"] = event.week
 
@@ -247,19 +252,19 @@ def create_attendance_register(project_id, filename):
 
         for attendee in (
             Attendance.objects.filter(booking__event=event).select_related("family_member__family")
-            .select_related("booking__family__registrant")
-            .order_by("booking__family__registrant__last_name")
-            .order_by("booking__family__registrant__first_name")
+            .select_related("booking__family")
+            .order_by("booking__family__last_name")
+            .order_by("booking__family__first_name")
         ):
             row += 1
             family_member = attendee.family_member
-            registrant = f"{attendee.booking.family.registrant.first_name} {attendee.booking.family.registrant.last_name}"
+            registrant = f"{attendee.booking.family.first_name} {attendee.booking.family.last_name}"
             print(f"    - Attendee: {row - 7}\t{family_member}")
             event_ws[f"A{row}"] = family_member.first_name
             event_ws[f"B{row}"] = family_member.last_name
             event_ws[f"E{row}"] = family_member.type.capitalize()
             event_ws[f"H{row}"] = 1 if attendee.attended else ""
-            event_ws[f"Q{row}"] = family_member.wp_member_id
+            event_ws[f"Q{row}"] = family_member.id
             if family_member.type == "CHILD":
                 event_ws[f"C{row}"] = 1 if family_member.childmore.fsm else ""
                 event_ws[f"D{row}"] = (
@@ -280,9 +285,9 @@ def create_attendance_register(project_id, filename):
 
         # Add Summary info
         summary_ws = workbook["Summary"]
-        summary_ws[f"B1"] = event.project.name
+        # TODO: summary_ws[f"B1"] = event.parent.title
         summary_ws[f"A{summary_seq}"] = event.id
-        summary_ws[f"B{summary_seq}"] = event.name
+        summary_ws[f"B{summary_seq}"] = event.title
         summary_ws[f"C{summary_seq}"] = event_ws["B3"].value
         summary_ws[f"D{summary_seq}"] = event_ws["B2"].value
         summary_ws[f"E{summary_seq}"] = event_ws[
