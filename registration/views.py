@@ -139,3 +139,34 @@ def update_family_member(request, pk):
 #         ]
 #     )
 
+
+# https://docs.wagtail.org/en/stable/extending/generic_views.html
+# Check wagtail_hooks.py for more
+
+from wagtail.admin.viewsets.model import ModelViewSet
+from .models import Parent, Child
+
+class ParentViewSet(ModelViewSet):
+    model = Parent
+    form_fields = ["first_name", "last_name", "diet_req", "diet_detail", "medical_req", "medical_detail"]
+    list_display = ["first_name", "last_name", "diet_req", "medical_req"]
+    icon = "user"
+    add_to_admin_menu = False
+    add_to_settings_menu = True
+    inspect_view_enabled = True
+
+
+parent_viewset = ParentViewSet("parent")  # defines /admin/parent/ as the base URL
+
+
+class ChildViewSet(ModelViewSet):
+    model = Child
+    form_fields = ["first_name", "last_name", "diet_req", "diet_detail", "medical_req", "medical_detail"]
+    list_display = ["first_name", "last_name", "diet_req", "medical_req"]
+    icon = "user"
+    add_to_admin_menu = False
+    add_to_settings_menu = True
+    inspect_view_enabled = True
+
+
+child_viewset = ChildViewSet("child")  # defines /admin/child/ as the base URL

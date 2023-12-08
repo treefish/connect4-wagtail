@@ -7,7 +7,7 @@ from django.views.generic.edit import FormView
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
-from events.models import ProjectPage, EventPage
+from events.models import ProjectPage, EventPage, EventType
 from bookings.models import Booking, Attendance
 from django.db.models import Count
 
@@ -27,43 +27,37 @@ def is_member(user):
 
 
 ### Events
-class EventBaseView(View):
+class EventBaseView(LoginRequiredMixin, UserPassesTestMixin, View):
     model = EventPage
     fields = '__all__'
     success_url = reverse_lazy('eventadmin:events')
 
+    def test_func(self):
+        return is_member(self.request.user)
 
-class EventListView(LoginRequiredMixin, UserPassesTestMixin, EventBaseView, ListView):
+
+class EventListView(EventBaseView, ListView):
     """View to list all events.
      Use the 'eventpage_list' variable in the template
      to access all Event objects"""
 
     template_name = 'eventadmin/event_list.html'
 
-    def test_func(self):
-        return is_member(self.request.user)
 
-
-class EventDetailView(LoginRequiredMixin, UserPassesTestMixin, EventBaseView, DetailView):
+class EventDetailView(EventBaseView, DetailView):
     """View to list the details from one event.
     Use the 'event' variable in the template to access
     the specific event here and in the Views below"""
 
     template_name = 'eventadmin/event_detail.html'
 
-    def test_func(self):
-        return is_member(self.request.user)
 
-
-class EventBookingsListView(LoginRequiredMixin, UserPassesTestMixin, EventBaseView, DetailView):
+class EventBookingsListView(EventBaseView, DetailView):
     """View to list the details from one event.
     Use the 'event' variable in the template to access
     the specific event here and in the Views below"""
 
     template_name = 'eventadmin/event_bookings_list.html'
-
-    def test_func(self):
-        return is_member(self.request.user)
 
 
 ########################################################################################################################
@@ -71,13 +65,9 @@ class EventBookingsListView(LoginRequiredMixin, UserPassesTestMixin, EventBaseVi
 # These functions/classes are taken from connect4-django app
 ########################################################################################################################
 
-class EventAttendanceView(LoginRequiredMixin, UserPassesTestMixin, EventBaseView, DetailView):
+class EventAttendanceView(EventBaseView, DetailView):
     template_name = 'eventadmin/event_attendance_list.html'
     paginate_by = 50
-
-
-    def test_func(self):
-        return is_member(self.request.user)
 
 
     def get_context_data(self, **kwargs):
@@ -188,12 +178,8 @@ class EventAttendanceView(LoginRequiredMixin, UserPassesTestMixin, EventBaseView
         return context
 
 
-class DownloadAttendanceRegisterDaily(LoginRequiredMixin, UserPassesTestMixin, EventBaseView, DetailView):
+class DownloadAttendanceRegisterDaily(EventBaseView, DetailView):
     template_name = 'eventadmin/download_attendance_register.html'
-
-    def test_func(self):
-        return is_member(self.request.user)
-
 
     def get(self, request, *args, **kwargs):
         event = super().get_object()
@@ -203,7 +189,7 @@ class DownloadAttendanceRegisterDaily(LoginRequiredMixin, UserPassesTestMixin, E
         return redirect(success_url)
 
 
-class UploadAttendanceRegisterDaily(LoginRequiredMixin, UserPassesTestMixin, EventBaseView, FormView):
+class UploadAttendanceRegisterDaily(EventBaseView, FormView):
     '''
     Upload a pre-generated Attendance Register Daily and updates the Booking & Attendance entries for the event
     found in the spreadsheet.
@@ -220,11 +206,6 @@ class UploadAttendanceRegisterDaily(LoginRequiredMixin, UserPassesTestMixin, Eve
     template_name = "eventadmin/upload_attendance_register_daily.html"
     # Might be able to use the same form as WP AR
     form_class = UploadAttendanceRegisterForm
-
-
-    def test_func(self):
-        return is_member(self.request.user)
-
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST, request.FILES)
@@ -252,3 +233,123 @@ class UploadAttendanceRegisterDaily(LoginRequiredMixin, UserPassesTestMixin, Eve
             return redirect(success_url)
         else:
             return render(request, self.template_name, {'form': form})
+
+
+
+### Projects
+class ProjectBaseView(LoginRequiredMixin, UserPassesTestMixin, View):
+    model = ProjectPage
+    fields = '__all__'
+    success_url = reverse_lazy('projects')
+
+
+    def test_func(self):
+        return is_member(self.request.user)
+
+
+class ProjectListView(ProjectBaseView, ListView):
+    """View to list all projects.
+     Use the 'project_list' variable in the template
+     to access all Project objects"""
+
+    template_name = 'eventadmin/project_list.html'
+
+
+class ProjectDetailView(ProjectBaseView, DetailView):
+    """View to list the details from one project.
+    Use the 'project' variable in the template to access
+    the specific project here and in the Views below"""
+
+    template_name = 'eventadmin/project_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        project_id = self.kwargs['pk']
+        project = ProjectPage.objects.get(id=project_id)
+
+        event_list = EventPage.objects.live().descendant_of(project).order_by("-start_date")
+            #EventPage.objects.filter(project=project_id).order_by("-start_date")
+        context['event_list'] = event_list
+        return context
+
+
+class ProjectSummaryView(ProjectBaseView, DetailView):
+    """View to list the details from one project.
+    Use the 'project' variable in the template to access
+    the specific project here and in the Views below"""
+
+    template_name = 'eventadmin/project_summary.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        project_id = self.kwargs['pk']
+        project = ProjectPage.objects.get(id=project_id)
+        # print(f"Project ID: {project_id}")
+        stats = []
+
+        event_list = EventPage.objects.live().descendant_of(project).order_by("start_date")
+        # get a list of unique weeks for the Events in this Project. 'weeks' is a list or at least is iterable.
+        weeks = event_list.order_by().values_list('week', flat=True).distinct().order_by("week")
+        for week in weeks:
+            week_events = event_list.filter(week=week)
+            week_attendance_list = Attendance.objects.filter(booking__event__in=week_events)
+            #
+            parents_registered = week_attendance_list.filter(family_member__type='PARENT')
+            parents_attended = parents_registered.filter(attended=True)
+            parents_attended_unique = parents_attended.values("family_member").annotate(attendances=Count('family_member'))\
+                .order_by('family_member__last_name', 'family_member__first_name')
+            children_registered = week_attendance_list.filter(family_member__type='CHILD')
+            children_attended = children_registered.filter(attended=True)
+            children_attended_unique = children_attended.values("family_member").annotate(attendances=Count('family_member'))\
+                .order_by('family_member__last_name', 'family_member__first_name')
+
+            print(f"Week: {week} - PAT: {parents_attended.count()}\tUnique: {parents_attended_unique.count()}\tPAT: {children_attended.count()}\tUnique: {children_attended_unique.count()}")
+            week_stats = {'week_number': week,
+                          'parents_registered': parents_registered.count(),
+                          'parents_attended': parents_attended.count(),
+                          'parents_attended_unique': parents_attended_unique.count(),
+                          'children_registered': children_registered.count(),
+                          'children_attended': children_attended.count(),
+                          'children_attended_unique': children_attended_unique.count(),
+                          }
+            stats.append(week_stats)
+
+        context['stats'] = stats
+        print(f"Stats: {stats}")
+        return context
+
+
+class ProjectUniqueAttendeesView(ProjectBaseView, DetailView):
+    """View to list the Attendees and how many events they have attended.
+    Use the 'project' variable in the template to access
+    the specific project here and in the Views below"""
+
+    template_name = 'eventadmin/project_unique_attendees_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        project_id = self.kwargs['pk']
+        project = ProjectPage.objects.get(id=project_id)
+        print(f"Project ID: {project_id}")
+
+        event_type = EventType.objects.get(name="Family Fun Days")
+        #event_list = Event.objects.filter(project=project_id, event_type=event_type)  # Family Fun Day events only
+        event_list = EventPage.objects.live().descendant_of(project).filter(event_type=event_type).order_by("start_date")
+        event_count = event_list.count()
+
+        all_registered = Attendance.objects.filter(booking__event__in=event_list)
+        children_registered = all_registered.filter(family_member__type="CHILD").select_related(
+            "family_member__childmore")
+        children_attended = children_registered.filter(attended=True).select_related("family_member__childmore").order_by("family_member__last_name", "family_member__first_name")
+#        children_attended_unique = children_attended.distinct("family_member__last_name", "family_member__first_name")#.order_by("family_member__last_name", "family_member__first_name")
+        children_attended_unique = children_attended.values("family_member").annotate(num=Count("family_member")).values_list("family_member__first_name", "family_member__last_name", "num")
+
+        print(f"Registered: {all_registered.count()}\tChildren registered: {children_registered.count()}\tChildren attended: {children_attended.count()}")
+        # for cau in children_attended_unique:
+        #     print(F" - {cau}")
+        context['attendance_list'] = children_attended_unique
+
+        # context['bookings'] = Booking.objects.filter(family__registrant=self.request.user)
+        # context['family'] = Family.objects.get(registrant=self.request.user)
+        return context
+

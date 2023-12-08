@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5" style="width: 70%;">
+    <div class="col">
+        <h1 class="text-center">Project Attendance Summary (Admin)</h1>
+        <div class="d-flex justify-content-center">
+            <table class="table table-striped mt-5" style="width: 50%">
+                <thead>
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                  <tr><td>Name</td><td>{{ projectpage.title }}</td></tr>
+                  <tr><td>Description</td><td>{{ projectpage.description }}</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="d-flex justify-content-center">
+            <table class="table table-striped mt-5" style="width: 70%">
+                <thead>
+                  <tr>
+                    {% comment %} <th>#</th> {% endcomment %}
+                    <th class="text-end" scope="col">Week</th>
+                    <th class="text-end" scope="col">Parents Registered</th>
+                    <th class="text-end" scope="col">Parents Attended</th>
+                    <th class="text-end" scope="col">Parents Attended (Unique)</th>
+                    <th class="text-end" scope="col">Children Registered</th>
+                    <th class="text-end" scope="col">Children Attended</th>
+                    <th class="text-end" scope="col">Children Attended (Unique)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                   {% for week_stats in stats %}
+                   <tr class="text-end">
+                       <td>{{ week_stats.week_number }}</td>
+                       <td>{{ week_stats.parents_registered }}</td>
+                       <td>{{ week_stats.parents_attended }}</td>
+                       <td>{{ week_stats.parents_attended_unique }}</td>
+                       <td>{{ week_stats.children_registered }}</td>
+                       <td>{{ week_stats.children_attended }}</td>
+                       <td>{{ week_stats.children_attended_unique }}</td>
+                   </tr>
+                   {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+
+<!--        <div class="d-flex justify-content-center">-->
+<!--            <table class="table table-striped mt-5" style="width: 40%">-->
+<!--                <thead>-->
+<!--                  <tr>-->
+<!--                    {% comment %} <th>#</th> {% endcomment %}-->
+<!--                    <th class="text-end" scope="col">Catgeory</th>-->
+<!--                    <th class="text-end" scope="col">#</th>-->
+<!--                  </tr>-->
+<!--                </thead>-->
+<!--                <tbody>-->
+<!--                   <tr class="text-end">-->
+<!--                       <td>FSM (all children)</td>-->
+<!--                       <td>{{ stats.children_fsm_total }}</td>-->
+<!--                   </tr>-->
+<!--                   <tr class="text-end">-->
+<!--                       <td>SEN (all children)</td>-->
+<!--                       <td>{{ stats.children_sen_total }}</td>-->
+<!--                   </tr>-->
+<!--                   <tr class="text-end">-->
+<!--                       <td>Children 4-10</td>-->
+<!--                       <td>{{ stats.children_4_10_total }}</td>-->
+<!--                   </tr>-->
+<!--                    <tr class="text-end">-->
+<!--                       <td>Children 4-10 Attended</td>-->
+<!--                       <td>{{ stats.children_4_10_attended_total }}</td>-->
+<!--                   </tr>-->
+<!--                   <tr class="text-end">-->
+<!--                       <td>Children 4-10 Attended, FSM</td>-->
+<!--                       <td>{{ stats.children_4_10_attended_fsm_total }}</td>-->
+<!--                   </tr>-->
+<!--                   <tr class="text-end">-->
+<!--                       <td>Children < 4 Attended</td>-->
+<!--                       <td>{{ stats.children_lt_4_attended_total }}</td>-->
+<!--                   </tr>-->
+<!--                   <tr class="text-end">-->
+<!--                       <td>Children 4-10 Attended, Non-FSM, SEN</td>-->
+<!--                       <td>{{ stats.children_4_10_attended_non_fsm_sen_total }}</td>-->
+<!--                   </tr>-->
+<!--                   <tr class="text-end">-->
+<!--                       <td>Teenagers Attended (11-17)</td>-->
+<!--                       <td>{{ stats.teenagers_attended_total }}</td>-->
+
+<!--                   </tr>-->
+<!--                </tbody>-->
+<!--            </table>-->
+
+<!--        </div>-->
+
+        <div class="d-flex justify-content-center">
+            <a href="{% url 'project_detail' projectpage.id %}" class="d-block btn btn-primary btn-lg my-5">Back</a>
+        </div>
+    </div>
+
+
+</div>
+
+
+{% endblock  %}

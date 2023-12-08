@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5" style="width: 100%;">
+    <div class="col">
+        <h1 class="text-center">Project Details (Admin)</h1>
+        <div class="d-flex justify-content-center">
+            <table class="table table-striped mt-5" style="width: 100%">
+                <thead>
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                  <tr><td>Name</td><td>{{ projectpage.title }}</td></tr>
+                  <tr><td>Description</td><td>{{ projectpage.description }}</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col">
+        <h2 class="text-center">Events</h2>
+        <table class="table mt-5 sortable">
+            <thead>
+                <tr>
+                    {% comment %} <th>#</th> {% endcomment %}
+                    <th class="text-center" scope="col">Name</th>
+                    <th class="text-center" scope="col">Event Type</th>
+                    <th class="text-center" scope="col">Start Date</th>
+                    <th class="text-center" scope="col">End Date</th>
+                    <th class="text-center" scope="col">Week</th>
+                    <th class="text-center" scope="col">Capacity</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for event in event_list %}
+                <tr {% if event.event_type.id == 1 %} class="table-primary" {% else %} class="table-success" {% endif %}>
+                    {% comment %} <th scope="row">{{forloop.counter}}</th> {% endcomment %}
+                    <td class="ml-5"><a href="{% url 'event_detail' event.id %}">{{event.title}}</a></td>
+                    <td class="text-center">{{event.event_type}}</td>
+                    <td class="text-center">{{event.start_date|date:'j/m/Y'}}</td>
+                    <td class="text-center">{{event.end_date|date:'j/m/Y'}}</td>
+                    <td class="text-center">{{event.week}}</td>
+                    <td class="text-center">{{event.capacity}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+        <h2>Reports</h2>
+        <table class="bd-example-snippet bd-code-snippet">
+            <tr>
+                <td><a class="btn btn-info" href="{% url 'project_attendance_summary' projectpage.id %}" role="button">Summary</a></td>
+                <td><a class="btn btn-info" href="{% url 'project_unique_attendees_list' projectpage.id %}" role="button">Unique Attendees List - Children</a></td>
+{% comment %}
+                <td><a class="btn btn-info" href="{% url 'download_attendance_register' projectpage.id %}" role="button">Attendance Register</a></td>
+                <td><a class="btn btn-info" href="{% url 'download_master_weekly_monitoring_statement' project.id %}" role="button">Master Weekly Monitoring Statement</a></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td><a class="btn btn-info" href="{% url 'download_attendance_register_unique' project.id %}"  role="button">Attendance Register Unique</a></td>
+                <td></a></td>
+{% endcomment %}
+            </tr>
+        </table>
+
+    <div class="bd-example-snippet bd-code-snippet">
+        <a href="{% url 'projects' %}" class="d-block btn btn-primary btn-lg my-5">Projects</a>
+    </div>
+</div>
+
+{% endblock  %}
